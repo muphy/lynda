@@ -1,0 +1,38 @@
+<ion-view view-title="현재 방영중인 프로그램">
+  <ion-content>
+    <ion-list class="list" id="program-list">
+      <ion-item class="program-item" collection-repeat="program in programlist">
+        <div class="list card">
+          <div class="item item-avatar">
+            <img ng-src="{{program.thumbImg}}" class="program-item-img">
+            <h2 style="display:inline-block;">{{program.scheduleName}}</h2>
+            <span ng-show="program.episodeNo">-{{program.episodeNo}}</span>
+            <p>{{program.channelName}}</p>
+            <p>{{program.startHour}}~{{program.endHour}}</p>
+          </div>
+          <div ng-show="program.lastTalk" class="item item-body">
+            <!--<img class="full-image" src="delorean.jpg">-->
+             <!--<p>
+              <a href="#" class="subdued">1 Like</a>
+              <a href="#" class="subdued">5 Comments</a>
+            </p>-->
+          </div>
+          <div class="item tabs tabs-secondary tabs-icon-left">
+            <!--<a class="tab-item" href="#">
+              <i class="icon ion-thumbsup"></i>
+              Like
+            </a>-->
+            <a class="tab-item" href="#">
+              <i class="icon ion-person-stalker"></i>
+              참여자수
+            </a>
+            <a class="tab-item" href="{{program.roomName}}" ng-click="ink()">
+              <i class="icon ion-chatbubbles"></i>
+              대화방참여
+            </a>
+          </div>
+        </div>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

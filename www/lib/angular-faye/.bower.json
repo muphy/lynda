@@ -1,0 +1,34 @@
+{
+  "name": "angular-faye",
+  "version": "0.2.2",
+  "homepage": "https://github.com/monterail/angular-faye",
+  "description": "Angular.js + Faye",
+  "main": "build/angular-faye.js",
+  "keywords": [
+    "angular",
+    "faye",
+    "ruby"
+  ],
+  "authors": [
+    "Tymon Tobolski <tymon.tobolski@monterail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "0.2.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.2.2",
+    "commit": "a7dd1773179bcd301a0e74bae182d9ab02d34c91"
+  },
+  "_source": "git://github.com/teamon/angular-faye.git",
+  "_target": "~0.2.2",
+  "_originalSource": "angular-faye",
+  "_direct": true
+}

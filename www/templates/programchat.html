@@ -1,0 +1,48 @@
+<ion-view id="userMessagesView" cache-view="false" view-title="{{programName}}">
+	<ion-content has-bouncing="true" class="has-header has-footer" delegate-handle="userMessageScroll">
+		<div ng-repeat="message in messages" class="message-wrapper" >
+			<div ng-if="me.userId !== message.userId">
+				<img ng-click="viewProfile(message)" class="profile-pic left" ng-src="{{message.pic}}" ng-hide="message.isSameTalker" onerror="onProfilePicError(this)"
+				/>
+				<div class="chat-bubble left">
+					<div class="message" ng-bind-html="message.text | nl2br" autolinker></div>
+					<div class="message-detail">
+						<span ng-click="viewProfile(message)" class="bold">{{toUser.username}}</span>
+						<!--<span am-time-ago="message.date"></span>-->
+					</div>
+				</div>
+				<div class="chat-time left">{{message.date | date:'h:mma'}}</div>
+			</div>
+			<div ng-if="me.userId === message.userId">
+				<img ng-click="viewProfile(message)" class="profile-pic right" ng-src="{{message.pic}}" ng-hide="message.isSameTalker" onerror="onProfilePicError(this)"
+				/>
+				<div class="chat-bubble right">
+					
+					<div class="message" ng-bind-html="message.text | nl2br" autolinker></div>
+					<div class="message-detail">
+						<span ng-click="viewProfile(message)" class="bold">{{user.username}}</span>
+						<!--<span am-time-ago="message.date"></span>-->
+					</div>
+				</div>
+				<div class="chat-time right">{{message.date | date:'h:mma'}}</div>
+			</div>
+			<div class="cf"></div>
+		</div>
+	</ion-content>
+	<ion-footer-bar ng-show="isLogin" class="bar-stable item-input-inset message-footer" keyboard-attach>
+		<div class="item-input-wrapper">
+			<textarea ng-model="input.message" value="" required minlength="1" maxlength="1500" msd-elastic></textarea>
+		</div>
+		<div class="footer-btn-wrap">
+			<button class="button bar-positive-900 ink" style="padding:0;" ng-click="sendMessage()">
+				<i class="icon ion-arrow-right-a"></i>
+			</button>
+		</div>
+	</ion-footer-bar>
+
+	<div ng-show="!isLogin" class="button-bar social-login">
+		<!--<button class="button button-small button-border icon-left ion-social-google button-assertive-900">Google+</button>
+		<button class="button button-small button-border icon-left ion-social-twitter button-calm-900">Twitter</button>-->
+		<button class="button button-block button-border icon-left button-positive-900" ng-click="facebooklogin()">login Facebook for chat</button>
+	</div>
+</ion-view>
