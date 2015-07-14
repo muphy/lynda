@@ -1,6 +1,6 @@
 <ion-view id="userMessagesView" cache-view="false" view-title="{{programName}}">
 	<ion-content has-bouncing="true" class="has-header has-footer" delegate-handle="userMessageScroll">
-		<div ng-repeat="message in messages" class="message-wrapper" >
+		<div ng-repeat="message in messages" class="message-wrapper">
 			<div ng-if="me.userId !== message.userId">
 				<img ng-click="viewProfile(message)" class="profile-pic left" ng-src="{{message.pic}}" ng-hide="message.isSameTalker" onerror="onProfilePicError(this)"
 				/>
@@ -11,20 +11,25 @@
 						<!--<span am-time-ago="message.date"></span>-->
 					</div>
 				</div>
-				<div class="chat-time left">{{message.date | date:'h:mma'}}</div>
+				<div class="message-info left">
+					<div class="talker name left">오종암</div>
+					<div class="chat-time left">{{message.date | date:'h:mma'}}</div>
+				</div>
 			</div>
 			<div ng-if="me.userId === message.userId">
 				<img ng-click="viewProfile(message)" class="profile-pic right" ng-src="{{message.pic}}" ng-hide="message.isSameTalker" onerror="onProfilePicError(this)"
 				/>
 				<div class="chat-bubble right">
-					
 					<div class="message" ng-bind-html="message.text | nl2br" autolinker></div>
 					<div class="message-detail">
 						<span ng-click="viewProfile(message)" class="bold">{{user.username}}</span>
 						<!--<span am-time-ago="message.date"></span>-->
 					</div>
 				</div>
-				<div class="chat-time right">{{message.date | date:'h:mma'}}</div>
+				<div class="message-info right">
+					<div class="talker name right">오종암</div>
+					<div class="chat-time right">{{message.date | date:'h:mma'}}</div>
+				</div>
 			</div>
 			<div class="cf"></div>
 		</div>
@@ -39,7 +44,6 @@
 			</button>
 		</div>
 	</ion-footer-bar>
-
 	<div ng-show="!isLogin" class="button-bar social-login">
 		<!--<button class="button button-small button-border icon-left ion-social-google button-assertive-900">Google+</button>
 		<button class="button button-small button-border icon-left ion-social-twitter button-calm-900">Twitter</button>-->

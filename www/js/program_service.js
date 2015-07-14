@@ -82,13 +82,13 @@ angular.module('facebook.login.service', ['starter.session.service'])
             }).catch(function (err) {
               $cordovaToast.show('facebook login fail:' + err, 'show', 'center').then(function (success) { }, function (err) { });
             }).then(function (profile) {
-              profile.imgurl = 'http://graph.facebook.com/' + profile.id + '/picture?type=square';
               return profile;
             }).then(function (profile) {
               profile.provider = 'facebook';
               return $http.post(configuration.serverUrl + '/users', profile);
             }).then(function (data, status, headers, config) {
               var profile = data.data;
+              profile.imgurl = 'http://graph.facebook.com/' + profile.id + '/picture?type=square';
               sessionManager.saveSession(profile);
               $rootScope.$broadcast('profile.update', profile);
               console.log('success for saving user to db' + profile);

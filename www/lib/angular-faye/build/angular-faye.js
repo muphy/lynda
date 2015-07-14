@@ -25,6 +25,7 @@
               if (!message.ext) message.ext = {};
               if (sessionManager.isLogin()) {
                 message.ext.userId = sessionManager.me()._id;
+                 // client.publish(subscription,)
               }
             }
             // outgoing Object {channel: "/meta/subscribe", clientId: "1gyybponr8ufx2s1emrtlmobrav5hxk", subscription: "/C633308504_1436759400000", id: "3"}

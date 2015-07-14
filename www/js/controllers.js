@@ -142,9 +142,8 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     $scope.messages = [];
     $scope.programName = $stateParams.programName;
     $scope.isLogin = sessionManager.isLogin();
-    console.log(channelName);
+    // console.log(channelName);
     // mock acquiring data via $stateParams
-    var messageCheckTimer;
     var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
     var footerBar; // gets set in $ionicView.enter
     var scroller;
@@ -156,6 +155,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
         if (!message || message.text.length == 0) {
           return;
         }
+        if(message)
         console.log('subscribe data:' + message);
         $scope.doneLoading = true;
         // $scope.messages = data.messages;
@@ -179,9 +179,6 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
         txtInput = angular.element(footerBar.querySelector('textarea'));
       }, 0);
 
-      messageCheckTimer = $interval(function () {
-        // here you could check for new messages if your app doesn't use push notifications or user disabled them
-      }, 20000);
     });
 
     $scope.$on('$ionicView.leave', function () {
