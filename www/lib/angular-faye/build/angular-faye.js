@@ -34,21 +34,26 @@
         };
         client.addExtension(authExtension);
         return {
+          channels: {},
           client: client,
           publish: function (channel, data) {
             console.log('pub:');
             return this.client.publish(channel, data);
           },
           subscribe: function (channel, callback) {
-            return this.client.subscribe(channel, function (data) {
-              console.log('sub:');
+            var sub = this.client.subscribe(channel, function (data) {
+              console.log('sub:'+data);
               return scope.$apply(function () {
                 return callback(data);
               });
             });
+            this.channels[channel] = sub;
+            return sub;
           },
           unsubscribe: function (channel, callback) {
+            this.channels[channel].cancel();
             return this.client.unsubscribe(channel, function (data) {
+              console.log('unsub:'+data);
               return scope.$apply(function () {
                 return callback(data);
               });

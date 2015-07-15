@@ -1,7 +1,10 @@
 <ion-view id="userMessagesView" cache-view="false" view-title="{{programName}}">
 	<ion-content has-bouncing="true" class="has-header has-footer" delegate-handle="userMessageScroll">
 		<div ng-repeat="message in messages" class="message-wrapper">
-			<div ng-if="me.userId !== message.userId">
+			<div ng-if="!message.isChat" class="event-message">
+				{{message.text}}
+			</div>
+			<div ng-if="message.isChat && me.userId !== message.userId">
 				<img ng-click="viewProfile(message)" class="profile-pic left" ng-src="{{message.pic}}" ng-hide="message.isSameTalker" onerror="onProfilePicError(this)"
 				/>
 				<div class="chat-bubble left">
@@ -12,11 +15,11 @@
 					</div>
 				</div>
 				<div class="message-info left">
-					<div class="talker name left">오종암</div>
+					<div class="talker name left">{{message.username}}</div>
 					<div class="chat-time left">{{message.date | date:'h:mma'}}</div>
 				</div>
 			</div>
-			<div ng-if="me.userId === message.userId">
+			<div ng-if="message.isChat && me.userId === message.userId">
 				<img ng-click="viewProfile(message)" class="profile-pic right" ng-src="{{message.pic}}" ng-hide="message.isSameTalker" onerror="onProfilePicError(this)"
 				/>
 				<div class="chat-bubble right">
@@ -27,7 +30,7 @@
 					</div>
 				</div>
 				<div class="message-info right">
-					<div class="talker name right">오종암</div>
+					<div class="talker name right">{{message.username}}</div>
 					<div class="chat-time right">{{message.date | date:'h:mma'}}</div>
 				</div>
 			</div>

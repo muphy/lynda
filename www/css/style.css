@@ -68,6 +68,7 @@ p {
 .menu-open .ion-navicon {
     transform: rotate(-360deg);
     -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
 }
 
@@ -78,6 +79,7 @@ p {
 .item.item-radio .radio-icon {
     opacity: 1;
     -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
 }
 
@@ -85,6 +87,7 @@ p {
     opacity: 0;
     transform: scale(1.6);
     -webkit-transition: all 0.1s ease-in-out;
+    -moz-transition: all 0.1s ease-in-out;
     transition: all 0.1s ease-in-out;
 }
 
@@ -123,6 +126,7 @@ p {
     opacity: 0;
     width: 700px;
     -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
 }
 
@@ -159,6 +163,7 @@ p {
     text-rendering: auto;
     line-height: 1;
     -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
     content: '\f216 ';
 }
 
@@ -320,6 +325,7 @@ img.profile-pic.right {
   left: 1px;
   bottom: -4px;
   -webkit-transform: rotate(-65deg) skew(25deg);
+  -moz-transform: rotate(-65deg) skew(25deg);
 }
 
 .chat-bubble.right {
@@ -336,6 +342,7 @@ img.profile-pic.right {
 }
 .message-info.right {
   float: right;
+  margin-right: 2px;
 }
 .message-info.left {
   float: left;
@@ -371,6 +378,7 @@ img.profile-pic.right {
   right: -3px;
   bottom: 0px;
   -webkit-transform: skew(25deg);
+  -moz-transform: skew(25deg);
 }
 
 .chat-bubble.right a.autolinker {
@@ -486,3 +494,8 @@ input, textarea {
   -o-user-select: auto !important;
   user-select: auto !important;  
  }
+ 
+#userMessagesView .event-message {
+  text-align: center;
+  font-size: 12px;
+}
