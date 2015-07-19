@@ -337,12 +337,12 @@ img.profile-pic.right {
 
 .message-info {
   position: relative;
-  max-width: 15%;
-  top:7px;
+  max-width: 12%;
+  top:17px;
 }
 .message-info.right {
   float: right;
-  margin-right: 2px;
+  margin-right: -2px;
 }
 .message-info.left {
   float: left;
@@ -352,6 +352,16 @@ img.profile-pic.right {
   position: absoulte;
   font-size: 9px;
   color: #733165;
+}
+
+.text-ellipsis {
+   /*overflow: hidden;*/
+   text-overflow: ellipsis;
+   display: -webkit-box;
+   line-height: 8px;     /* fallback */
+   max-height: 16px;      /* fallback */
+   -webkit-line-clamp: 2; /* number of lines to show */
+   -webkit-box-orient: vertical;
 }
 
 .chat-time {

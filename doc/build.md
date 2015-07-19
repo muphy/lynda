@@ -4,3 +4,8 @@
     remove attribute "data-tap-disabled" in the 40 line.
   2.app.js
     comment 9 line and uncomment 10 line.
+    
+
+2. after you built on the local enviroment,
+   > ionic state restore 
+   #http://stackoverflow.com/questions/30042975/manage-cordova-plugins-with-npm-package-json
