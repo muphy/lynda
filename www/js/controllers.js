@@ -132,6 +132,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     $timeout, $interval, $ionicScrollDelegate, Faye, sessionManager, facebookLoginManager) {
     // console.log($ionicHistory.viewHistory());
     var channelName = '/' + $stateParams.programId;
+    var programName = decodeURIComponent(channelName.split('_')[1]);
     var me = sessionManager.me();
     var userId;
     if (me) {
@@ -210,17 +211,14 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
       Faye.publish(channelName, message);
     });
 
-    // $scope.$watch('input.message', function (newValue, oldValue) {
-    //   console.log('input.message $watch, newValue ' + newValue);
-    //   if (!newValue) newValue = '';
-    //   localStorage['userMessage-' + $scope.toUser._id] = newValue;
-    // });
     var me = sessionManager.me();
+    
     $scope.sendMessage = function () {
       var content = $scope.input.message;
       if (!content && content.length == 0) {
         return;
       }
+      
       var message = {
         pic: me.imgurl,
         username: me.name,
@@ -228,6 +226,12 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
         text: content,
         ext: {
           type: 'chat'
+        },
+        date: new Date(),
+        channel : {
+          name: $stateParams.programName,
+          id: channelName,
+          programName: programName
         }
       };
 
@@ -235,8 +239,6 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
       // you can't see the effect of this in the browser it needs to be used on a real device
       // for some reason the one time blur event is not firing in the browser but does on devices
       keepKeyboardOpen();
-
-      message.date = new Date();
       Faye.publish(channelName, message);
       $timeout(function () {
         keepKeyboardOpen();
@@ -298,6 +300,15 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     facebookLoginManager.attachLogin($scope, function (profile) {
       $scope.isLogin = true;
       me = sessionManager.me();
+      var message = {
+        username: me.name,
+        text: me.name + '님께서 입장하셨습니다.',
+        ext: {
+          type: 'join',
+          userName: me.name,
+        }
+      };
+      Faye.publish(channelName,message);
     });
     
     // I emit this event from the monospaced.elastic directive, read line 480

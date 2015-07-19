@@ -11,7 +11,7 @@
         }
         var authExtension = {
           incoming: function (message, callback) {
-            console.log('incoming', message);
+            // console.log('incoming', message);
             // if(!message.ext)message.ext = {};
             // message.ext = 'abcdef';
             callback(message);
