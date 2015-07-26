@@ -1,24 +1,21 @@
 <!DOCTYPE html>
 <html>
+  
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title></title>
-
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="lib/robotodraft/robotodraft.css" rel="stylesheet">
     <link href="lib/ionic-material/dist/ionic.material.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
-
-    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
-    <link href="css/ionic.app.css" rel="stylesheet">
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above <link href="css/ionic.app.css"
+    rel="stylesheet">
     -->
-
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
     <script src="lib/ngCordova/dist/ng-cordova.js"></script>
     <script src="lib/ionic-material/dist/ionic.material.min.js"></script>
-
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
     <script src="lib/angular-elastic/elastic.js"></script>
@@ -27,17 +24,20 @@
     <script src="lib/angular-moment/angular-moment.min.js"></script>-->
     <script src="lib/Autolinker.js/dist/Autolinker.min.js"></script>
     <script src="lib/ngOpenFB/ngOpenFB.js"></script>
+    <script src="lib/localforage/dist/localforage.js"></script>
+    <script src="lib/angular-localforage/dist/angular-localForage.js"></script>
     <!--<script type="text/javascript" src="http://localhost:8888/faye/client.js"></script>-->
     <script type="text/javascript" src="http://128.199.139.107:8888/faye/client.js"></script>
-    
     <script src="lib/angular-faye/build/angular-faye.js"></script>
     <!-- your app's js -->
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/program_service.js"></script>
   </head>
+  
   <body ng-app="starter">
-  <!--<body ng-app="starter" data-tap-disabled="true">-->
+    <!--<body ng-app="starter" data-tap-disabled="true">-->
     <ion-nav-view></ion-nav-view>
   </body>
+
 </html>

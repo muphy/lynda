@@ -1,7 +1,7 @@
 <ion-view view-title="현재 방영중인 프로그램">
   <ion-content>
     <ion-list class="list" id="program-list">
-      <ion-item class="program-item" collection-repeat="program in programlist">
+      <ion-item class="program-item" ng-repeat="program in programlist">
         <div class="list card">
           <div class="item item-avatar">
             <img ng-src="{{program.thumbImg}}" class="program-item-img">

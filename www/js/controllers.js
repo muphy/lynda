@@ -116,6 +116,9 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     var refreshProgramList = function () {
       ProgramService.getCurrentProgramList().success(function (data, status) {
         $scope.programlist = convertProgramList(data);
+        timer = $timeout(function () {
+          ionicMaterialMotion.ripple();
+        }, 100);        
       });
     };
     var stopTime = $interval(refreshProgramList, 1000 * 60);
