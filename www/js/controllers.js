@@ -27,6 +27,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     facebookLoginManager.attachLogin($scope);
 
     // Create the login modal that we will use later
+    // example modal
     $ionicModal.fromTemplateUrl('templates/login.html', {
       scope: $scope
     }).then(function (modal) {
@@ -55,20 +56,22 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     };
   })
 
-  .controller('SettingsCtrl', function ($scope, facebookLoginManager) {
-    $scope.settingsList = [
-      { text: "Wireless", checked: true },
-      { text: "GPS", checked: false },
-      { text: "Bluetooth", checked: false }
-    ];
+  .controller('SettingsCtrl', function ($scope, sessionManager,facebookLoginManager) {
+    var isLogin = sessionManager.isLogin();
+    $scope.session = {checked:isLogin};
 
-    $scope.pushNotificationChange = function () {
-      console.log('Push Notification Change', $scope.pushNotification.checked);
+    $scope.sessionChanged = function () {
+      var status = $scope.session.checked;
+      if(status) {
+        
+      } else {
+        
+      }
+      console.log('Push Notification Change', $scope.session.checked);
     };
 
-    $scope.pushNotification = { checked: true };
-    $scope.emailNotification = 'Subscribed';
   })
+  
   .controller('ProgramlistCtrl', function ($scope, ProgramService, ionicMaterialMotion, ionicMaterialInk, Faye, $timeout, $ionicHistory, $interval, $filter) {
     // console.log($ionicHistory.currentStateName());
     // console.log($ionicHistory.viewHistory());

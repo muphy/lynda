@@ -49,6 +49,10 @@ angular.module('starter.session.service', ['starter.localstorage.service', 'Cach
         $localstorage.setObject('me', profile);
         CacheService.put('me', profile);
       },
+      removeSession: function() {
+        $localstorage.setObject('me', null);
+        CacheService.remove('me');
+      },
       me: function () {
         if (CacheService.get('me')) {
           return CacheService.get('me');
@@ -101,6 +105,14 @@ angular.module('facebook.login.service', ['starter.session.service'])
               console.log('get me error');
             });
         };
+      };
+      facebookLoginManager.detachLogin = function(cb) {
+        $openFB.revokePermissions(cb).then(function() {
+          console.log('facebook logout');
+          //TODO
+          //remove session from sessionManager
+          //$rootScope.$broadcast('profile.remove', null);
+        });
       };
       return facebookLoginManager;
     }]);
