@@ -1,7 +1,7 @@
 <ion-view view-title="현재 방영중인 프로그램">
   <ion-content>
     <ion-list class="list" id="program-list">
-      <ion-item class="program-item" ng-repeat="program in programlist">
+      <ion-item class="program-item" ng-repeat="program in programlist track by program._id">
         <div class="list card">
           <div class="item item-avatar">
             <img ng-src="{{program.thumbImg}}" class="program-item-img">
@@ -34,5 +34,18 @@
         </div>
       </ion-item>
     </ion-list>
+    
+      <!--<div class="list">
+
+        <a ng-repeat="item in items" 
+           href="#/{{item.id}}"
+           class="item item-thumbnail-left">
+
+          <img ng-src="{{ item.image }}">
+          <h2>{{ item.album }}</h2>
+          <h4>{{ item.artist }}</h4>
+        </a>
+
+      </div>-->
   </ion-content>
 </ion-view>

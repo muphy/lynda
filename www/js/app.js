@@ -6,8 +6,8 @@
 // 'starter.controllers' is found in controllers.js
 var app = angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'ionic-material', 'monospaced.elastic', 'ngOpenFB'])
   .constant("configuration", {
-  "serverUrl": "http://localhost:8888"
-  // "serverUrl": "http://128.199.139.107:8888"
+  // "serverUrl": "http://localhost:8888"
+  "serverUrl": "http://128.199.139.107:8888"
 })
   .run(function ($ionicPlatform, $openFB, $ionicPopup,$ionicHistory) {
 
