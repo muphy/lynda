@@ -9,6 +9,3 @@
 2. after you built on the local enviroment,
    > ionic state restore 
    #http://stackoverflow.com/questions/30042975/manage-cordova-plugins-with-npm-package-json
-
-3. add crosswalk
-   > ionic browser add crosswalk   
