@@ -1,7 +1,7 @@
 
 angular.module('starter.controllers', ['starter.services', 'faye', 'starter.session.service', 'facebook.login.service'])
 
-  .controller('AppCtrl', function ($scope, $ionicModal, $timeout, sessionManager, $window, facebookLoginManager) {
+  .controller('AppCtrl', function ($scope, $ionicModal, $timeout, sessionManager, $window, facebookLoginManager, $ionicPlatform, $cordovaInAppBrowser) {
   
     // With the new view caching in Ionic, Controllers are only called
     // when they are recreated or on app start, instead of every page change.
@@ -9,8 +9,28 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     // listen for the $ionicView.enter event:
     //$scope.$on('$ionicView.enter', function(e) {
     //});
-  
+    var webbrowser_option = {
+      location: 'no',
+      clearcache: 'no',
+      toolbar: 'no'
+    };
     // Form data for the login modal
+    $scope.doAppRate = function () {
+      if ($ionicPlatform.is('ios')) {
+        //if you release ios version, uncomment below.
+        // window.open('itms-apps://itunes.apple.com/us/app/domainsicle-domain-name-search/id511364723?ls=1&mt=8'); // or itms://
+        alert('sorry that We do not have ios version');
+      } else if ($ionicPlatform.is('android')) {
+        $cordovaInAppBrowser.open('market://details?id=com.ionicframework.lynda949552','_blank',webbrowser_option).then(function() {
+          $cordovaInAppBrowser.close();
+        })
+      }
+    };
+    $scope.goToFanPage = function () {
+
+      $cordovaInAppBrowser.open('https://www.facebook.com/pages/%EB%82%9C-%ED%98%BC%EC%9E%90-TV-%EB%B3%B8%EB%8B%A4/1050248588342906','_blank',webbrowser_option);
+
+    };
     $scope.loginData = {};
     var me = sessionManager.me();
     if (sessionManager.isLogin()) {
@@ -56,22 +76,22 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     };
   })
 
-  .controller('SettingsCtrl', function ($scope, sessionManager,facebookLoginManager) {
+  .controller('SettingsCtrl', function ($scope, sessionManager, facebookLoginManager) {
     var isLogin = sessionManager.isLogin();
-    $scope.session = {checked:isLogin};
+    $scope.session = { checked: isLogin };
 
     $scope.sessionChanged = function () {
       var status = $scope.session.checked;
-      if(status) {
-        
+      if (status) {
+
       } else {
-        
+
       }
       console.log('Push Notification Change', $scope.session.checked);
     };
 
   })
-  
+
   .controller('ProgramlistCtrl', function ($scope, ProgramService, ionicMaterialMotion, ionicMaterialInk, Faye, $timeout, $ionicHistory, $interval, $filter) {
     // console.log($ionicHistory.currentStateName());
     // console.log($ionicHistory.viewHistory());
@@ -121,7 +141,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
         $scope.programlist = convertProgramList(data);
         timer = $timeout(function () {
           ionicMaterialMotion.ripple();
-        }, 100);        
+        }, 100);
       });
     };
     var stopTime = $interval(refreshProgramList, 1000 * 60);
@@ -218,13 +238,13 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     });
 
     var me = sessionManager.me();
-    
+
     $scope.sendMessage = function () {
       var content = $scope.input.message;
       if (!content && content.length == 0) {
         return;
       }
-      
+
       var message = {
         pic: me.imgurl,
         username: me.name,
@@ -234,7 +254,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
           type: 'chat'
         },
         date: new Date(),
-        channel : {
+        channel: {
           name: $stateParams.programName,
           id: channelName,
           programName: programName
@@ -314,7 +334,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
           userName: me.name,
         }
       };
-      Faye.publish(channelName,message);
+      Faye.publish(channelName, message);
     });
     
     // I emit this event from the monospaced.elastic directive, read line 480

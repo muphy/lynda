@@ -21,10 +21,10 @@
                     <i class="ion ion-star"></i>facebook login</ion-item>-->
                 <ion-item menu-close href="#/app/settings" >
                     <i class="ion ion-star"></i>설정</ion-item>
-                <ion-item menu-close href="#/app/playlists">
-                    <i class="ion ion-star"></i>버그제출</ion-item>
-                <ion-item menu-close href="#/app/playlists">
-                    <i class="ion ion-star"></i>기능 요청하기</ion-item>
+                <ion-item menu-close ng-click="doAppRate()">
+                    <i class="ion ion-star"></i>평가하기</ion-item>
+                <ion-item menu-close ng-click="goToFanPage()">
+                    <i class="ion ion-star"></i>팬페이지 가기</ion-item>
             </ion-list>
         </ion-content>
     </ion-side-menu>

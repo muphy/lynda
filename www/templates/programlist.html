@@ -5,10 +5,10 @@
         <div class="list card">
           <div class="item item-avatar">
             <img ng-src="{{program.thumbImg}}" class="program-item-img">
-            <h2 style="display:inline-block;">{{program.scheduleName}}</h2>
-            <span ng-show="program.episodeNo">-{{program.episodeNo}}</span>
-            <p>{{program.channelName}}</p>
-            <p>{{program.startHour}}~{{program.endHour}}</p>
+            <h2 style="display:inline-block;">{{::program.scheduleName}}</h2>
+            <span ng-show="program.episodeNo">-{{::program.episodeNo}}</span>
+            <p>{{::program.channelName}}</p>
+            <p>{{::program.startHour}}~{{::program.endHour}}</p>
           </div>
           <div ng-show="program.lastTalk" class="item item-body">
             <!--<img class="full-image" src="delorean.jpg">-->
@@ -26,7 +26,7 @@
               <i class="icon ion-person-stalker"></i>
               참여자수
             </a>
-            <a class="tab-item" href="{{program.roomName}}" ng-click="ink()">
+            <a class="tab-item" href="{{::program.roomName}}" ng-click="ink()">
               <i class="icon ion-chatbubbles"></i>
               대화방참여
             </a>

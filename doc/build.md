@@ -12,3 +12,7 @@
 
 3. add crosswalk
    > ionic browser add crosswalk   
+
+4. fix problem that "add plugin" not working.
+   > npm install -g cordova@5.0.0 && ionic plugin add https://github.com/pushandplay/cordova-plugin-apprate.git && npm install -g cordova
+   
