@@ -346,12 +346,14 @@ img.profile-pic.right {
 }
 .message-info.left {
   float: left;
+  margin-left: -4px;
 }
 .talker {
   display: inline-block;
   position: absoulte;
   font-size: 9px;
   color: #733165;
+  max-width: 40px;
 }
 
 .text-ellipsis {

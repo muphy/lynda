@@ -11,9 +11,14 @@
         }
         var authExtension = {
           incoming: function (message, callback) {
-            // console.log('incoming', message);
+            var channel = message.channel;
+            if (channel === "/meta/unsubscribe") {
+              // console.log(message)
+              console.log('incoming-unsubscribe', message);
+            }
             // if(!message.ext)message.ext = {};
             // message.ext = 'abcdef';
+            
             callback(message);
           },
           outgoing: function (message, callback) {

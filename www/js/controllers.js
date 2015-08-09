@@ -21,14 +21,14 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
         // window.open('itms-apps://itunes.apple.com/us/app/domainsicle-domain-name-search/id511364723?ls=1&mt=8'); // or itms://
         alert('sorry that We do not have ios version');
       } else if ($ionicPlatform.is('android')) {
-        $cordovaInAppBrowser.open('market://details?id=com.ionicframework.lynda949552','_blank',webbrowser_option).then(function() {
+        $cordovaInAppBrowser.open('market://details?id=com.ionicframework.lynda949552', '_blank', webbrowser_option).then(function () {
           $cordovaInAppBrowser.close();
         })
       }
     };
     $scope.goToFanPage = function () {
 
-      $cordovaInAppBrowser.open('https://www.facebook.com/pages/%EB%82%9C-%ED%98%BC%EC%9E%90-TV-%EB%B3%B8%EB%8B%A4/1050248588342906','_blank',webbrowser_option);
+      $cordovaInAppBrowser.open('https://www.facebook.com/pages/%EB%82%9C-%ED%98%BC%EC%9E%90-TV-%EB%B3%B8%EB%8B%A4/1050248588342906', '_blank', webbrowser_option);
 
     };
     $scope.loginData = {};
@@ -169,6 +169,9 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     $scope.messages = [];
     $scope.programName = $stateParams.programName;
     $scope.isLogin = sessionManager.isLogin();
+    // $scope.$on('profile.update', function (event, data) {
+    //   me = sessionManager.me();
+    // });
     // console.log(channelName);
     // mock acquiring data via $stateParams
     var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
@@ -201,7 +204,9 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
         var lastMessage = _.last($scope.messages);
         if (lastMessage) {
           if (lastMessage.userId == message.userId) {
-            message.isSameTalker = true;
+            //TODO if before talker is same with current talker, Hide profile image. if hide profile, change false to true;
+            message.isSameTalker = false;
+            // message.isSameTalker = true;
           }
         }
         $scope.messages.push(message);
@@ -236,8 +241,6 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
       };
       Faye.publish(channelName, message);
     });
-
-    var me = sessionManager.me();
 
     $scope.sendMessage = function () {
       var content = $scope.input.message;
