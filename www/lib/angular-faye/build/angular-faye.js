@@ -47,7 +47,7 @@
           },
           subscribe: function (channel, callback) {
             var sub = this.client.subscribe(channel, function (data) {
-              console.log('sub:'+data);
+              console.log('sub:'+JSON.stringify(data));
               return scope.$apply(function () {
                 return callback(data);
               });
@@ -58,7 +58,7 @@
           unsubscribe: function (channel, callback) {
             this.channels[channel].cancel();
             return this.client.unsubscribe(channel, function (data) {
-              console.log('unsub:'+data);
+              console.log('unsub:'+JSON.stringify(data));
               return scope.$apply(function () {
                 return callback(data);
               });

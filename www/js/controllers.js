@@ -230,16 +230,16 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     });
 
     $scope.$on('$ionicView.beforeLeave', function () {
-      var message = {
-        pic: me.imgurl,
-        username: me.name,
-        userId: me.userId,
-        text: me.name + " 님께서 나가셨습니다.",
-        ext: {
-          type: 'exit'
-        }
-      };
-      Faye.publish(channelName, message);
+      // var message = {
+      //   pic: me.imgurl,
+      //   username: me.name,
+      //   userId: me.userId,
+      //   text: me.name + " 님께서 나가셨습니다.",
+      //   ext: {
+      //     type: 'exit'
+      //   }
+      // };
+      // Faye.publish(channelName, message);
     });
 
     $scope.sendMessage = function () {
