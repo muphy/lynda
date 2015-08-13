@@ -35,14 +35,14 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     var me = sessionManager.me();
     if (sessionManager.isLogin()) {
       $scope.profileImg = me.imgurl || 'img/logo.png';
-      $scope.userName = me.name;
+      $scope.username = me.name;
     } else {
       $scope.profileImg = 'img/logo.png';
-      $scope.userName = '';
+      $scope.username = '';
     }
     $scope.$on('profile.update', function (event, data) {
       $scope.profileImg = data.imgurl;
-      $scope.userName = data.name;
+      $scope.username = data.name;
     });
     facebookLoginManager.attachLogin($scope);
 
@@ -95,6 +95,13 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
   .controller('ProgramlistCtrl', function ($scope, ProgramService, ionicMaterialMotion, ionicMaterialInk, Faye, $timeout, $ionicHistory, $interval, $filter) {
     // console.log($ionicHistory.currentStateName());
     // console.log($ionicHistory.viewHistory());
+    
+    $scope.$on('$ionicView.beforeEnter', function () {
+      console.log('UserMessages $ionicView.enter');
+      Faye.subscribe('/lobby', function (message) {
+        console.log('in the lobby', message);
+      });
+    });
     var reset = function () {
       var inClass = document.querySelectorAll('.in');
       for (var i = 0; i < inClass.length; i++) {
@@ -179,16 +186,16 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     var scroller;
     var txtInput; // ^^^
 
-    $scope.$on('$ionicView.enter', function () {
+    $scope.$on('$ionicView.beforeEnter', function () {
       console.log('UserMessages $ionicView.enter');
       Faye.subscribe(channelName, function (message) {
-        if (message.ext.type === 'chat' && message.text.length == 0) {
+        if (message.type === 'chat' && message.text.length == 0) {
           return;
         }
-        if (message.ext.type == 'join') {
+        if (message.type == 'join') {
           message.isChat = false;
-          message.text = message.ext.userName + ' 님께서 입장하셨습니다.';
-        } else if (message.ext.type == 'exit') {
+          message.text = message.username + ' 님께서 입장하셨습니다.';
+        } else if (message.type == 'exit') {
           message.isChat = false;
         } else {
           message.isChat = true;
@@ -217,7 +224,25 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
         scroller = document.body.querySelector('#userMessagesView .scroll-content');
         txtInput = angular.element(footerBar.querySelector('textarea'));
       }, 0);
+    });
 
+    $scope.$on('$ionicView.enter', function () {
+      var message = {
+        type: 'join'
+      };
+      if (sessionManager.isLogin()) {
+        message = _.extend(message, {
+          pic: me.imgurl,
+          username: me.name,
+          userId: me.userId,
+          text: me.name + " 님께서 들어오셨습니다."
+        });
+      } else {
+        message = _.extend(message, {
+          text: 'Guest 님께서 들어오셨습니다.'
+        });
+      }
+      Faye.publish(channelName, message);
     });
 
     $scope.$on('$ionicView.leave', function () {
@@ -230,16 +255,22 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     });
 
     $scope.$on('$ionicView.beforeLeave', function () {
-      // var message = {
-      //   pic: me.imgurl,
-      //   username: me.name,
-      //   userId: me.userId,
-      //   text: me.name + " 님께서 나가셨습니다.",
-      //   ext: {
-      //     type: 'exit'
-      //   }
-      // };
-      // Faye.publish(channelName, message);
+      var message = {
+        type: 'exit'
+      };
+      if (sessionManager.isLogin()) {
+        message = _.extend(message, {
+          pic: me.imgurl,
+          username: me.name,
+          userId: me.userId,
+          text: me.name + " 님께서 나가셨습니다."
+        });
+      } else {
+        message = _.extend(message, {
+          text: 'Guest 님께서 나가셨습니다.'
+        });
+      }
+      Faye.publish(channelName, message);
     });
 
     $scope.sendMessage = function () {
@@ -329,15 +360,15 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     facebookLoginManager.attachLogin($scope, function (profile) {
       $scope.isLogin = true;
       me = sessionManager.me();
-      var message = {
-        username: me.name,
-        text: me.name + '님께서 입장하셨습니다.',
-        ext: {
-          type: 'join',
-          userName: me.name,
-        }
-      };
-      Faye.publish(channelName, message);
+      // var message = {
+      //   username: me.name,
+      //   text: me.name + ' 님께서 들어오셨습니다.',
+      //   ext: {
+      //     type: 'join',
+      //     username: me.name,
+      //   }
+      // };
+      // Faye.publish(channelName, message);
     });
     
     // I emit this event from the monospaced.elastic directive, read line 480

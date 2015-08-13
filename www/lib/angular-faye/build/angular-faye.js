@@ -11,28 +11,14 @@
         }
         var authExtension = {
           incoming: function (message, callback) {
-            var channel = message.channel;
-            if (channel === "/meta/unsubscribe") {
-              // console.log(message)
-              console.log('incoming-unsubscribe', message);
-            }
-            // if(!message.ext)message.ext = {};
-            // message.ext = 'abcdef';
-            
+            // var channel = message.channel;
+            // if (channel === "/meta/unsubscribe") {
+            //   console.log('incoming-unsubscribe', message);
+            // }
             callback(message);
           },
           outgoing: function (message, callback) {
             // console.log('outgoing', message);
-            var channel = message.channel;
-            // var clientId = message.clientId;
-            // var subscription = message.subscription;
-            if (channel === "/meta/subscribe") {
-              if (!message.ext) message.ext = {};
-              if (sessionManager.isLogin()) {
-                message.ext.userId = sessionManager.me()._id;
-                 // client.publish(subscription,)
-              }
-            }
             // outgoing Object {channel: "/meta/subscribe", clientId: "1gyybponr8ufx2s1emrtlmobrav5hxk", subscription: "/C633308504_1436759400000", id: "3"}
             callback(message);
           }
