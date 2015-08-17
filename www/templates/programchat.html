@@ -1,11 +1,11 @@
-<ion-view id="userMessagesView" cache-view="false" view-title="{{programName}}">
+<ion-view id="userMessagesView" cache-view="false" view-title="{{::programName}}">
 	<ion-content has-bouncing="true" class="has-header has-footer" delegate-handle="userMessageScroll">
 		<div ng-repeat="message in messages" class="message-wrapper">
 			<div ng-if="!message.isChat" class="event-message">
 				{{message.text}}
 			</div>
 			<div ng-if="message.isChat && me.userId !== message.userId">
-				<img ng-click="viewProfile(message)" class="profile-pic left" ng-src="{{message.pic}}" ng-hide="message.isSameTalker" onerror="onProfilePicError(this)"
+				<img ng-click="viewProfile(message)" class="profile-pic left" ng-src="{{message.pic}}" onerror="onProfilePicError(this)"
 				/>
 				<div class="chat-bubble left">
 					<div class="message" ng-bind-html="message.text | nl2br" autolinker></div>
@@ -20,7 +20,7 @@
 				</div>
 			</div>
 			<div ng-if="message.isChat && me.userId === message.userId">
-				<img ng-click="viewProfile(message)" class="profile-pic right" ng-src="{{message.pic}}" ng-hide="message.isSameTalker" onerror="onProfilePicError(this)"
+				<img ng-click="viewProfile(message)" class="profile-pic right" ng-src="{{message.pic}}" onerror="onProfilePicError(this)"
 				/>
 				<div class="chat-bubble right">
 					<div class="message" ng-bind-html="message.text | nl2br" autolinker></div>

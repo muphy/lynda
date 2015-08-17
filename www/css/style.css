@@ -511,3 +511,8 @@ input, textarea {
   text-align: center;
   font-size: 12px;
 }
+
+.header-badge{
+  top: -7px !important;
+  left: -11px !important;
+}

@@ -1,5 +1,7 @@
 <ion-view view-title="현재 방영중인 프로그램">
   <ion-content>
+    <ion-refresher pulling-text="refresh program list..." on-refresh="doRefresh()">
+    </ion-refresher>
     <ion-list class="list" id="program-list">
       <ion-item class="program-item" ng-repeat="program in programlist track by program._id">
         <div class="list card">
@@ -12,7 +14,7 @@
           </div>
           <div ng-show="program.lastTalk" class="item item-body">
             <!--<img class="full-image" src="delorean.jpg">-->
-             <!--<p>
+            <!--<p>
               <a href="#" class="subdued">1 Like</a>
               <a href="#" class="subdued">5 Comments</a>
             </p>-->
@@ -24,18 +26,16 @@
             </a>-->
             <a class="tab-item" href="#">
               <i class="icon ion-person-stalker"></i>
-              참여자수
+              <span class="badge badge-assertive">{{program.members}}</span>
             </a>
             <a class="tab-item" href="{{::program.roomName}}" ng-click="ink()">
-              <i class="icon ion-chatbubbles"></i>
-              대화방참여
-            </a>
+              <i class="icon ion-chatbubbles"></i> 대화방 참여 </a>
           </div>
         </div>
       </ion-item>
     </ion-list>
-    
-      <!--<div class="list">
+
+    <!--<div class="list">
 
         <a ng-repeat="item in items" 
            href="#/{{item.id}}"

@@ -92,16 +92,34 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
 
   })
 
-  .controller('ProgramlistCtrl', function ($scope, ProgramService, ionicMaterialMotion, ionicMaterialInk, Faye, $timeout, $ionicHistory, $interval, $filter) {
+  .controller('ProgramlistCtrl', function ($rootScope, $scope, ProgramService, ionicMaterialMotion, ionicMaterialInk, Faye, $timeout, $ionicHistory, $interval, $filter) {
     // console.log($ionicHistory.currentStateName());
     // console.log($ionicHistory.viewHistory());
-    
-    $scope.$on('$ionicView.beforeEnter', function () {
+    $scope.programlist = [];
+    $scope.$on('$ionicView.enter', function () {
       console.log('UserMessages $ionicView.enter');
+
       Faye.subscribe('/lobby', function (message) {
         console.log('in the lobby', message);
+        var updatedProgram = JSON.parse(message).program;
+        var scheduleId = updatedProgram.scheduleId;
+        var idx = _.findIndex($scope.programlist, { scheduleId: updatedProgram.scheduleId });
+        if (idx > -1) {
+          $scope.programlist[idx].members = updatedProgram.members;
+        }
+        var currentStateName = $ionicHistory.currentStateName();
+        if (/programchat/.test(currentStateName)) {
+          var stateId = $ionicHistory.currentView().stateId;
+          var regexp = new RegExp(scheduleId, "gi");
+          if (regexp.test(stateId)) {
+            $rootScope.$broadcast('members.count.update', updatedProgram);
+          }
+        }
       });
     });
+    $scope.doRefresh = function () {
+      refreshProgramList();
+    };
     var reset = function () {
       var inClass = document.querySelectorAll('.in');
       for (var i = 0; i < inClass.length; i++) {
@@ -149,23 +167,28 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
         timer = $timeout(function () {
           ionicMaterialMotion.ripple();
         }, 100);
-      });
+      })
+        .finally(function () {
+          // Stop the ion-refresher from spinning
+          $scope.$broadcast('scroll.refreshComplete');
+        });
     };
-    var stopTime = $interval(refreshProgramList, 1000 * 60);
-    ProgramService.getCurrentProgramList().success(handleSuccess);
+    refreshProgramList();
+    // var stopTime = $interval(refreshProgramList, 1000 * 60);
+    // ProgramService.getCurrentProgramList().success(handleSuccess);
+    
     $scope.$on(
       "$destroy",
       function (event) {
         $timeout.cancel(timer);
-        $interval.cancel(stopTime);
-      }
-      );
+        // $interval.cancel(stopTime);
+      });
   })
-  .controller('ProgramchatCtrl', function ($scope, $rootScope, $stateParams, $ionicActionSheet,
+  .controller('ProgramchatCtrl', function ($scope, $rootScope, $http, configuration, $stateParams, $ionicActionSheet,
     $timeout, $interval, $ionicScrollDelegate, Faye, sessionManager, facebookLoginManager) {
     // console.log($ionicHistory.viewHistory());
     var channelName = '/' + $stateParams.programId;
-    var programName = decodeURIComponent(channelName.split('_')[1]);
+    var scheduleId = $stateParams.programId.split('_')[0]
     var me = sessionManager.me();
     var userId;
     if (me) {
@@ -179,45 +202,44 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     // $scope.$on('profile.update', function (event, data) {
     //   me = sessionManager.me();
     // });
-    // console.log(channelName);
-    // mock acquiring data via $stateParams
     var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
     var footerBar; // gets set in $ionicView.enter
     var scroller;
     var txtInput; // ^^^
-
+    
+    $scope.$on('members.count.update', function (event, data) {
+      $scope.members = data.members;
+    });
     $scope.$on('$ionicView.beforeEnter', function () {
       console.log('UserMessages $ionicView.enter');
-      Faye.subscribe(channelName, function (message) {
-        if (message.type === 'chat' && message.text.length == 0) {
-          return;
-        }
-        if (message.type == 'join') {
-          message.isChat = false;
-          message.text = message.username + ' 님께서 입장하셨습니다.';
-        } else if (message.type == 'exit') {
-          message.isChat = false;
-        } else {
-          message.isChat = true;
-        }
-        // console.log('subscribe data:' + message);
-        $scope.doneLoading = true;
-        // $scope.messages = data.messages;
+      $http.get(configuration.serverUrl + '/messages/' + scheduleId)
+        .success(function (res) {
+          $scope.messages = res || [];
+          Faye.subscribe(channelName, function (message) {
+            if (message.type === 'chat' && message.text.length == 0) {
+              return;
+            }
+            message.isChat = message.type === 'chat';
+            // console.log('subscribe data:' + message);
+            $scope.doneLoading = true;
+            // $scope.messages = data.messages;
 
-        $timeout(function () {
-          viewScroll.scrollBottom();
-        }, 0);
+            $timeout(function () {
+              viewScroll.scrollBottom();
+            }, 0);
 
-        var lastMessage = _.last($scope.messages);
-        if (lastMessage) {
-          if (lastMessage.userId == message.userId) {
-            //TODO if before talker is same with current talker, Hide profile image. if hide profile, change false to true;
-            message.isSameTalker = false;
-            // message.isSameTalker = true;
-          }
-        }
-        $scope.messages.push(message);
-      });
+            // var lastMessage = _.last($scope.messages);
+            // if (lastMessage) {
+            //   if (lastMessage.userId == message.userId) {
+            //     //TODO if before talker is same with current talker, Hide profile image. if hide profile, change false to true;
+            //     message.isSameTalker = false;
+            //     // message.isSameTalker = true;
+            //   }
+            // }
+            $scope.messages.push(message);
+          });
+        });
+
 
       $timeout(function () {
         footerBar = document.body.querySelector('#userMessagesView .bar-footer');
@@ -252,6 +274,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
       Faye.unsubscribe(channelName, function (data) {
         console.log('unsubscribe data:' + data);
       });
+
     });
 
     $scope.$on('$ionicView.beforeLeave', function () {
@@ -284,14 +307,13 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
         username: me.name,
         userId: me.userId,
         text: content,
-        ext: {
-          type: 'chat'
-        },
+        type: 'chat',
+        isChat: true,
         date: new Date(),
         channel: {
           name: $stateParams.programName,
           id: channelName,
-          programName: programName
+          scheduleId: scheduleId
         }
       };
 
@@ -360,15 +382,6 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     facebookLoginManager.attachLogin($scope, function (profile) {
       $scope.isLogin = true;
       me = sessionManager.me();
-      // var message = {
-      //   username: me.name,
-      //   text: me.name + ' 님께서 들어오셨습니다.',
-      //   ext: {
-      //     type: 'join',
-      //     username: me.name,
-      //   }
-      // };
-      // Faye.publish(channelName, message);
     });
     
     // I emit this event from the monospaced.elastic directive, read line 480
