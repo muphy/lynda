@@ -1,4 +1,7 @@
 <ion-view view-title="현재 방영중인 프로그램">
+  <ion-nav-buttons side="right">
+    <button class="button button-icon button-clear ion-refresh" ng-click="doRefresh()"></button>
+  </ion-nav-buttons>
   <ion-content>
     <ion-refresher pulling-text="refresh program list..." on-refresh="doRefresh()">
     </ion-refresher>

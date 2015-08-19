@@ -1,4 +1,10 @@
-<ion-view id="userMessagesView" cache-view="false" view-title="{{::programName}}">
+<ion-view id="userMessagesView" cache-view="true" view-title='{{::programName}}'>
+	<ion-nav-buttons side="right">
+		<span class="badge badge-assertive right-header-badge">{{members}}</span>
+		<button class="button button-icon button-clear ion-person-stalker" ng-click="showMembers()">
+		</button>
+	</ion-nav-buttons>
+
 	<ion-content has-bouncing="true" class="has-header has-footer" delegate-handle="userMessageScroll">
 		<div ng-repeat="message in messages" class="message-wrapper">
 			<div ng-if="!message.isChat" class="event-message">

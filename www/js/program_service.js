@@ -49,7 +49,7 @@ angular.module('starter.session.service', ['starter.localstorage.service', 'Cach
         $localstorage.setObject('me', profile);
         CacheService.put('me', profile);
       },
-      removeSession: function() {
+      removeSession: function () {
         $localstorage.setObject('me', null);
         CacheService.remove('me');
       },
@@ -72,12 +72,31 @@ angular.module('starter.session.service', ['starter.localstorage.service', 'Cach
     }
   }]);
 
+angular.module('IDService', ['ionic'])
+  .factory('IDService', function ($cordovaDevice) {
+    var deviceModel;
+    var deviceUUID;
+    if (ionic.Platform.isAndroid()) {
+      deviceModel = $cordovaDevice.getModel();
+      deviceUUID = $cordovaDevice.getUUID();
+    } else {
+      console.log("Is not Android");
+      deviceModel = "windows";
+      deviceUUID = "testUUID";
+    }
+    return {
+      getId: function () {
+        return deviceUUID;
+      }
+    }
+  });
+
 
 angular.module('facebook.login.service', ['starter.session.service'])
-  .factory('facebookLoginManager', ['$openFB', '$http', 'sessionManager', '$window', 'configuration','$cordovaToast','$rootScope',
-    function ($openFB, $http, sessionManager, $window, configuration,$cordovaToast,$rootScope) {
+  .factory('facebookLoginManager', ['$openFB', '$http', 'sessionManager', '$window', 'configuration', '$cordovaToast', '$rootScope',
+    function ($openFB, $http, sessionManager, $window, configuration, $cordovaToast, $rootScope) {
       var facebookLoginManager = {};
-      facebookLoginManager.attachLogin = function ($scope,cb) {
+      facebookLoginManager.attachLogin = function ($scope, cb) {
         $scope.facebooklogin = function () {
           // $scope.modal.show();
           $openFB.login({ scope: 'public_profile,email,user_friends' })
@@ -96,8 +115,8 @@ angular.module('facebook.login.service', ['starter.session.service'])
               sessionManager.saveSession(profile);
               $rootScope.$broadcast('profile.update', profile);
               console.log('success for saving user to db' + profile);
-              if(cb) {
-                cb.call(null,profile);
+              if (cb) {
+                cb.call(null, profile);
               }
             }).catch(function (data, status, headers, config) {
               console.log("failure message: " + JSON.stringify({ data: data }));
@@ -106,8 +125,8 @@ angular.module('facebook.login.service', ['starter.session.service'])
             });
         };
       };
-      facebookLoginManager.detachLogin = function(cb) {
-        $openFB.revokePermissions(cb).then(function() {
+      facebookLoginManager.detachLogin = function (cb) {
+        $openFB.revokePermissions(cb).then(function () {
           console.log('facebook logout');
           //TODO
           //remove session from sessionManager

@@ -1,14 +1,7 @@
 
-angular.module('starter.controllers', ['starter.services', 'faye', 'starter.session.service', 'facebook.login.service'])
+angular.module('starter.controllers', ['starter.services', 'faye', 'starter.session.service', 'facebook.login.service', 'IDService'])
 
   .controller('AppCtrl', function ($scope, $ionicModal, $timeout, sessionManager, $window, facebookLoginManager, $ionicPlatform, $cordovaInAppBrowser) {
-  
-    // With the new view caching in Ionic, Controllers are only called
-    // when they are recreated or on app start, instead of every page change.
-    // To listen for when this page is active (for example, to refresh data),
-    // listen for the $ionicView.enter event:
-    //$scope.$on('$ionicView.enter', function(e) {
-    //});
     var webbrowser_option = {
       location: 'no',
       clearcache: 'no',
@@ -16,20 +9,10 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     };
     // Form data for the login modal
     $scope.doAppRate = function () {
-      if ($ionicPlatform.is('ios')) {
-        //if you release ios version, uncomment below.
-        // window.open('itms-apps://itunes.apple.com/us/app/domainsicle-domain-name-search/id511364723?ls=1&mt=8'); // or itms://
-        alert('sorry that We do not have ios version');
-      } else if ($ionicPlatform.is('android')) {
-        $cordovaInAppBrowser.open('market://details?id=com.ionicframework.lynda949552', '_blank', webbrowser_option).then(function () {
-          $cordovaInAppBrowser.close();
-        })
-      }
+      $cordovaInAppBrowser.open('https://play.google.com/store/apps/details?id=com.ionicframework.lynda949552', '_blank', webbrowser_option);
     };
     $scope.goToFanPage = function () {
-
-      $cordovaInAppBrowser.open('https://www.facebook.com/pages/%EB%82%9C-%ED%98%BC%EC%9E%90-TV-%EB%B3%B8%EB%8B%A4/1050248588342906', '_blank', webbrowser_option);
-
+      $cordovaInAppBrowser.open('https://www.facebook.com/alonetv0', '_blank', webbrowser_option);
     };
     $scope.loginData = {};
     var me = sessionManager.me();
@@ -45,41 +28,11 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
       $scope.username = data.name;
     });
     facebookLoginManager.attachLogin($scope);
-
-    // Create the login modal that we will use later
-    // example modal
-    $ionicModal.fromTemplateUrl('templates/login.html', {
-      scope: $scope
-    }).then(function (modal) {
-      $scope.modal = modal;
-    });
-
-    // Triggered in the login modal to close it
-    $scope.closeLogin = function () {
-      $scope.modal.hide();
-    };
-
-    // Open the login modal
-    $scope.login = function () {
-      $scope.modal.show();
-    };
-
-    // Perform the login action when the user submits the login form
-    $scope.doLogin = function () {
-      console.log('Doing login', $scope.loginData);
-
-      // Simulate a login delay. Remove this and replace with your login
-      // code if using a login system
-      $timeout(function () {
-        $scope.closeLogin();
-      }, 1000);
-    };
   })
 
   .controller('SettingsCtrl', function ($scope, sessionManager, facebookLoginManager) {
     var isLogin = sessionManager.isLogin();
     $scope.session = { checked: isLogin };
-
     $scope.sessionChanged = function () {
       var status = $scope.session.checked;
       if (status) {
@@ -95,29 +48,30 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
   .controller('ProgramlistCtrl', function ($rootScope, $scope, ProgramService, ionicMaterialMotion, ionicMaterialInk, Faye, $timeout, $ionicHistory, $interval, $filter) {
     // console.log($ionicHistory.currentStateName());
     // console.log($ionicHistory.viewHistory());
+    $rootScope.rightButton = '<button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>';
     $scope.programlist = [];
+    Faye.subscribe('/lobby', function (message) {
+      console.log('in the lobby', message);
+      var updatedProgram = JSON.parse(message).program;
+      var scheduleId = updatedProgram.scheduleId;
+      var idx = _.findIndex($scope.programlist, { scheduleId: updatedProgram.scheduleId });
+      if (idx > -1) {
+        timer = $timeout(function () {
+          $scope.programlist[idx].members = updatedProgram.members;
+        }, 200);
+      }
+      timer = $timeout(function () {
+        $rootScope.$broadcast('members.count.update', updatedProgram)
+      }, 200);
+
+    });
+
     $scope.$on('$ionicView.enter', function () {
       console.log('UserMessages $ionicView.enter');
-
-      Faye.subscribe('/lobby', function (message) {
-        console.log('in the lobby', message);
-        var updatedProgram = JSON.parse(message).program;
-        var scheduleId = updatedProgram.scheduleId;
-        var idx = _.findIndex($scope.programlist, { scheduleId: updatedProgram.scheduleId });
-        if (idx > -1) {
-          $scope.programlist[idx].members = updatedProgram.members;
-        }
-        var currentStateName = $ionicHistory.currentStateName();
-        if (/programchat/.test(currentStateName)) {
-          var stateId = $ionicHistory.currentView().stateId;
-          var regexp = new RegExp(scheduleId, "gi");
-          if (regexp.test(stateId)) {
-            $rootScope.$broadcast('members.count.update', updatedProgram);
-          }
-        }
-      });
+      refreshProgramList();
     });
     $scope.doRefresh = function () {
+      console.log('refreshed');
       refreshProgramList();
     };
     var reset = function () {
@@ -154,15 +108,9 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
       });
       return result;
     };
-    var handleSuccess = function (data, status) {
-      document.getElementsByTagName('ion-list')[0].className += ' animate-ripple';
-      $scope.programlist = convertProgramList(data);
-      timer = $timeout(function () {
-        ionicMaterialMotion.ripple();
-      }, 100);
-    };
     var refreshProgramList = function () {
       ProgramService.getCurrentProgramList().success(function (data, status) {
+        document.getElementsByTagName('ion-list')[0].className += ' animate-ripple';
         $scope.programlist = convertProgramList(data);
         timer = $timeout(function () {
           ionicMaterialMotion.ripple();
@@ -184,8 +132,8 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
         // $interval.cancel(stopTime);
       });
   })
-  .controller('ProgramchatCtrl', function ($scope, $rootScope, $http, configuration, $stateParams, $ionicActionSheet,
-    $timeout, $interval, $ionicScrollDelegate, Faye, sessionManager, facebookLoginManager) {
+  .controller('ProgramchatCtrl', function ($scope, $rootScope, $ionicModal, $http, configuration, $stateParams,
+    $timeout, $interval, $ionicScrollDelegate, Faye, sessionManager, facebookLoginManager, IDService) {
     // console.log($ionicHistory.viewHistory());
     var channelName = '/' + $stateParams.programId;
     var scheduleId = $stateParams.programId.split('_')[0]
@@ -196,6 +144,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
       $scope.me = me;
       $scope.me.userId = userId;
     }
+    $scope.members = 0;
     $scope.messages = [];
     $scope.programName = $stateParams.programName;
     $scope.isLogin = sessionManager.isLogin();
@@ -208,6 +157,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     var txtInput; // ^^^
     
     $scope.$on('members.count.update', function (event, data) {
+      console.log('members', data)
       $scope.members = data.members;
     });
     $scope.$on('$ionicView.beforeEnter', function () {
@@ -220,26 +170,40 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
               return;
             }
             message.isChat = message.type === 'chat';
-            // console.log('subscribe data:' + message);
-            $scope.doneLoading = true;
-            // $scope.messages = data.messages;
-
             $timeout(function () {
               viewScroll.scrollBottom();
             }, 0);
-
-            // var lastMessage = _.last($scope.messages);
-            // if (lastMessage) {
-            //   if (lastMessage.userId == message.userId) {
-            //     //TODO if before talker is same with current talker, Hide profile image. if hide profile, change false to true;
-            //     message.isSameTalker = false;
-            //     // message.isSameTalker = true;
-            //   }
-            // }
             $scope.messages.push(message);
           });
         });
 
+      var initModal = function () {
+        $ionicModal.fromTemplateUrl('templates/memberlist.html', {
+          scope: $scope,
+          animation: 'slide-in-up'
+        }).then(function (modal) {
+          $scope.modal = modal;
+        });
+        $scope.showMembers = function () {
+          $scope.modal.show();
+        };
+        $scope.closeModal = function () {
+          $scope.modal.hide();
+        };
+        //Cleanup the modal when we're done with it!
+        $scope.$on('$destroy', function () {
+          $scope.modal.remove();
+        });
+        // Execute action on hide modal
+        $scope.$on('modal.hidden', function () {
+          // Execute action
+        });
+        // Execute action on remove modal
+        $scope.$on('modal.removed', function () {
+          // Execute action
+        });
+      };
+      initModal();
 
       $timeout(function () {
         footerBar = document.body.querySelector('#userMessagesView .bar-footer');
@@ -250,7 +214,12 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
 
     $scope.$on('$ionicView.enter', function () {
       var message = {
-        type: 'join'
+        type: 'join',
+        channel: {
+          name: $stateParams.programName,
+          id: channelName,
+          scheduleId: scheduleId
+        }
       };
       if (sessionManager.isLogin()) {
         message = _.extend(message, {
@@ -261,6 +230,8 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
         });
       } else {
         message = _.extend(message, {
+          userId: IDService.getId(),
+          username: 'guest',
           text: 'Guest 님께서 들어오셨습니다.'
         });
       }
@@ -279,7 +250,12 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
 
     $scope.$on('$ionicView.beforeLeave', function () {
       var message = {
-        type: 'exit'
+        type: 'exit',
+        channel: {
+          name: $stateParams.programName,
+          id: channelName,
+          scheduleId: scheduleId
+        }
       };
       if (sessionManager.isLogin()) {
         message = _.extend(message, {
@@ -290,6 +266,8 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
         });
       } else {
         message = _.extend(message, {
+          userId: IDService.getId(),
+          username: 'guest',
           text: 'Guest 님께서 나가셨습니다.'
         });
       }

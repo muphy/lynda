@@ -369,7 +369,7 @@ img.profile-pic.right {
 .chat-time {
   display: inline-block;
   position: absolute;
-  top:15px;
+  top:20px;
   /*margin: 15px 0px 0px 0px;*/
   
   font-size: 9px;
@@ -512,7 +512,8 @@ input, textarea {
   font-size: 12px;
 }
 
-.header-badge{
-  top: -7px !important;
-  left: -11px !important;
+.right-header-badge{
+  top: 2px;
+  right: 30px;
+  position: absolute;
 }

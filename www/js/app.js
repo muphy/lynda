@@ -6,8 +6,8 @@
 // 'starter.controllers' is found in controllers.js
 var app = angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'ionic-material', 'monospaced.elastic', 'ngOpenFB'])
   .constant("configuration", {
-    // "serverUrl": "http://localhost:8888"
-    "serverUrl": "http://128.199.139.107:8888"
+    "serverUrl": "http://localhost:8888"
+    // "serverUrl": "http://128.199.139.107:8888"
   })
   .run(function ($ionicPlatform, $openFB, $ionicPopup, $ionicHistory) {
 
@@ -29,10 +29,10 @@ var app = angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'
       var currentStateName = $ionicHistory.currentStateName();
       // alert(currentStateName);
       // alert(JSON.stringify($ionicHistory.viewHistory()));
-      if (currentStateName === 'app.programlists') {
+      if (/programlists/.text(currentStateName)) {
         $ionicPopup.confirm({
-          title: 'System warning',
-          template: 'are you sure you want to exit?'
+          title: '알림',
+          template: '나가시겠습니까?'
         }).then(function (res) {
           if (res) {
             navigator.app.exitApp();
