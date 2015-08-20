@@ -61,6 +61,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
         }, 200);
       }
       timer = $timeout(function () {
+        console.log(updatedProgram);
         $rootScope.$broadcast('members.count.update', updatedProgram)
       }, 200);
 
@@ -156,9 +157,11 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     var scroller;
     var txtInput; // ^^^
     
-    $scope.$on('members.count.update', function (event, data) {
-      console.log('members', data)
-      $scope.members = data.members;
+    $scope.$on('members.count.update', function (event, updatedProgram) {
+      console.log('members', updatedProgram);
+      if(scheduleId === updatedProgram.scheduleId ) {
+        $scope.members = updatedProgram.members;
+      }
     });
     $scope.$on('$ionicView.beforeEnter', function () {
       console.log('UserMessages $ionicView.enter');

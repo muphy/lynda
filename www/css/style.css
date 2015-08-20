@@ -496,7 +496,14 @@ a.autolinker {
   margin-top:0px;
   margin-bottom: 0px;
 }
-
+#program-list .program-item h2.title {
+  color: #1A237E;
+  font-weight: bold;
+  display: inline-block;
+}
+#program-list .program-item span.episode {
+  color: #1A237E;
+}
 
 input, textarea {
   -webkit-user-select: auto !important;

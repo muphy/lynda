@@ -3,15 +3,15 @@
     <button class="button button-icon button-clear ion-refresh" ng-click="doRefresh()"></button>
   </ion-nav-buttons>
   <ion-content>
-    <ion-refresher pulling-text="refresh program list..." on-refresh="doRefresh()">
+    <ion-refresher pulling-text="프로그램 목록 업데이트..." on-refresh="doRefresh()">
     </ion-refresher>
     <ion-list class="list" id="program-list">
       <ion-item class="program-item" ng-repeat="program in programlist track by program._id">
         <div class="list card">
           <div class="item item-avatar">
             <img ng-src="{{program.thumbImg}}" class="program-item-img">
-            <h2 style="display:inline-block;">{{::program.scheduleName}}</h2>
-            <span ng-show="program.episodeNo">-{{::program.episodeNo}}</span>
+            <h2 class="title">{{::program.scheduleName}}</h2>
+            <span class="episode" ng-show="program.episodeNo">-{{::program.episodeNo}}</span>
             <p>{{::program.channelName}}</p>
             <p>{{::program.startHour}}~{{::program.endHour}}</p>
           </div>
