@@ -206,7 +206,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
           // Execute action
         });
       };
-      initModal();
+      // initModal();
 
       $timeout(function () {
         footerBar = document.body.querySelector('#userMessagesView .bar-footer');

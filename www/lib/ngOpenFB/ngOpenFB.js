@@ -188,7 +188,7 @@
               location = options.location ? 'yes' : 'no';
             }
             if (runningInCordova) {
-
+              window.isWeb = false;
               /*
                * If the app is running in Cordova, listen to URL changes in the InAppBrowser
                * until we get a URL with an access_token or an error.
@@ -200,7 +200,7 @@
                 location: location
               });
             } else {
-
+              window.isWeb = true;
               /*
                * Else open a popup window which will - after a successful login - redirect to our callback
                * where an event on $rootscope will be broadcasted.
@@ -410,8 +410,13 @@ angular.module('ngCordova.plugins.inAppBrowser', [])
             opt.push(key + '=' + value);
           });
           var optionsString = opt.join();
-
-          ref = $window.open(url, target, optionsString);
+          if(window.isWeb) {
+            console.log('web true');
+            ref = $window.open(url, target, optionsString);
+          } else {
+            console.log('web false');
+            ref = cordova.InAppBrowser.open(url, target, optionsString);
+          }
 
           ref.addEventListener('loadstart', function (event) {
             $timeout(function () {
