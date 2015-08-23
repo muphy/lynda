@@ -11,15 +11,20 @@
         }
         var authExtension = {
           incoming: function (message, callback) {
-            // var channel = message.channel;
-            // if (channel === "/meta/unsubscribe") {
-            //   console.log('incoming-unsubscribe', message);
-            // }
-            console.log('incomming', message);
+            var channel = message.channel;
+            if (channel === "/meta/connect") {
+              callback(message);
+              return;
+            }
+            // console.log('incomming', message);
             callback(message);
           },
           outgoing: function (message, callback) {
-            console.log('outgoing', message);
+            var channel = message.channel;
+            if (channel === "/meta/connect") {
+              callback(message);
+              return;
+            }
             // outgoing Object {channel: "/meta/subscribe", clientId: "1gyybponr8ufx2s1emrtlmobrav5hxk", subscription: "/C633308504_1436759400000", id: "3"}
             callback(message);
           }

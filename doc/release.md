@@ -13,4 +13,7 @@ arm build
 8. zipalign -v 4 D:\project\bonsa\lynda\platforms\android\build\outputs\apk\android-armv7-release-unsigned.apk D:\project\bonsa\lynda\platforms\android\build\outputs\apk\lynda.apk
 9. 
 
+home
+cd D:\programs\android-sdk\build-tools\22.0.1
+
 #http://ionicframework.com/docs/guide/publishing.html
