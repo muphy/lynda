@@ -134,7 +134,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
       });
   })
   .controller('ProgramchatCtrl', function ($scope, $rootScope, $ionicModal, $http, configuration, $stateParams,
-    $timeout, $interval, $ionicScrollDelegate, Faye, sessionManager, facebookLoginManager, IDService) {
+    $timeout, $interval, $ionicScrollDelegate, Faye, sessionManager, facebookLoginManager, IDService, $http) {
     // console.log($ionicHistory.viewHistory());
     var channelName = '/' + $stateParams.programId;
     var scheduleId = $stateParams.programId.split('_')[0]
@@ -159,7 +159,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     
     $scope.$on('members.count.update', function (event, updatedProgram) {
       console.log('members', updatedProgram);
-      if(scheduleId === updatedProgram.scheduleId ) {
+      if (scheduleId === updatedProgram.scheduleId) {
         $scope.members = updatedProgram.members;
       }
     });
@@ -186,6 +186,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
           animation: 'slide-in-up'
         }).then(function (modal) {
           $scope.modal = modal;
+          $scope.participants = [];
         });
         $scope.showMembers = function () {
           $scope.modal.show();
@@ -201,12 +202,18 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
         $scope.$on('modal.hidden', function () {
           // Execute action
         });
+        $scope.$on('modal.shown', function () {
+          $http.get(configuration.serverUrl + '/participants/' + scheduleId)
+            .success(function (res) {
+              $scope.participants = res;
+            });
+        });
         // Execute action on remove modal
         $scope.$on('modal.removed', function () {
           // Execute action
         });
       };
-      // initModal();
+      initModal();
 
       $timeout(function () {
         footerBar = document.body.querySelector('#userMessagesView .bar-footer');
@@ -216,6 +223,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     });
 
     $scope.$on('$ionicView.enter', function () {
+      console.log('$ionicView.enter fired!!!!!!!!!!!!!!!!!!!!');
       var message = {
         type: 'join',
         channel: {
@@ -228,6 +236,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
         message = _.extend(message, {
           pic: me.imgurl,
           username: me.name,
+          link: me.link,
           userId: me.userId,
           text: me.name + " 님께서 들어오셨습니다."
         });

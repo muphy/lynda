@@ -381,12 +381,12 @@
 
 // install   :     cordova plugin add org.apache.cordova.inappbrowser
 // link      :     https://github.com/apache/cordova-plugin-inappbrowser/blob/master/doc/index.md
-
+var ref_inAppBrowser;
 angular.module('ngCordova.plugins.inAppBrowser', [])
 
   .provider('$cordovaInAppBrowser', [function () {
 
-    var ref;
+    
     var defaultOptions = this.defaultOptions = {};
 
     this.setDefaultOptions = function (config) {
@@ -412,33 +412,33 @@ angular.module('ngCordova.plugins.inAppBrowser', [])
           var optionsString = opt.join();
           if(window.isWeb) {
             console.log('web true');
-            ref = $window.open(url, target, optionsString);
+            ref_inAppBrowser = $window.open(url, target, optionsString);
           } else {
             console.log('web false');
-            ref = cordova.InAppBrowser.open(url, target, optionsString);
+            ref_inAppBrowser = cordova.InAppBrowser.open(url, target, optionsString);
           }
 
-          ref.addEventListener('loadstart', function (event) {
+          ref_inAppBrowser.addEventListener('loadstart', function (event) {
             $timeout(function () {
               $rootScope.$broadcast('$cordovaInAppBrowser:loadstart', event);
             });
           }, false);
 
-          ref.addEventListener('loadstop', function (event) {
+          ref_inAppBrowser.addEventListener('loadstop', function (event) {
             q.resolve(event);
             $timeout(function () {
               $rootScope.$broadcast('$cordovaInAppBrowser:loadstop', event);
             });
           }, false);
 
-          ref.addEventListener('loaderror', function (event) {
+          ref_inAppBrowser.addEventListener('loaderror', function (event) {
             q.reject(event);
             $timeout(function () {
               $rootScope.$broadcast('$cordovaInAppBrowser:loaderror', event);
             });
           }, false);
 
-          ref.addEventListener('exit', function (event) {
+          ref_inAppBrowser.addEventListener('exit', function (event) {
             $timeout(function () {
               $rootScope.$broadcast('$cordovaInAppBrowser:exit', event);
             });
@@ -448,18 +448,26 @@ angular.module('ngCordova.plugins.inAppBrowser', [])
         },
 
         close: function () {
-          ref.close();
-          ref = null;
+          if(ref_inAppBrowser == null) {
+            console.log('ref_inAppBrowser is null',ref_inAppBrowser);
+          }
+          console.log('111111111111111111111111111111111111111111111111');
+          if(ref_inAppBrowser) {
+            ref_inAppBrowser.close();
+            console.log('222222222222222222222222222222222222222222222222');
+            ref_inAppBrowser = null;
+          }
+          console.log('333333333333333333333333333333333333333333333333');
         },
 
         show: function () {
-          ref.show();
+          ref_inAppBrowser.show();
         },
 
         executeScript: function (details) {
           var q = $q.defer();
 
-          ref.executeScript(details, function (result) {
+          ref_inAppBrowser.executeScript(details, function (result) {
             q.resolve(result);
           });
 
@@ -469,7 +477,7 @@ angular.module('ngCordova.plugins.inAppBrowser', [])
         insertCSS: function (details) {
           var q = $q.defer();
 
-          ref.insertCSS(details, function (result) {
+          ref_inAppBrowser.insertCSS(details, function (result) {
             q.resolve(result);
           });
 

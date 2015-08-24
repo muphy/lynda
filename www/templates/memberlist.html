@@ -7,18 +7,11 @@
     </div>
   </ion-header-bar>
   <ion-content>
-    <div class="list">
-      <a class="item item-avatar"> <img src="img/material1.jpg">
-        <h2>Material</h2>
-        <p>Sheets of paper</p>
-      </a>
-      <a class="item item-avatar"> <img src="img/material2.jpg">
-        <h2>Motion</h2>
-        <p>Accent and bring attention</p>
-      </a>
-      <a class="item item-avatar"> <img src="img/material3.jpg">
-        <h2>Ink</h2>
-        <p>Fluidity</p>
+    <div class="list" id="participant-list" ng-repeat="participant in participants track by participant._id">
+      <a img ng-src="{{program.thumbImg}}" />
+      <a class="item item-avatar"> <img ng-src="{{::participant.pic||'img/default-user.png'}}">
+        <h2>{{::participant.username}}</h2>
+        <p>join at <span>{{::participant.joinDate | date:'medium'}}</span></p>
       </a>
     </div>
   </ion-content>
