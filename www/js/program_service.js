@@ -112,6 +112,7 @@ angular.module('facebook.login.service', ['starter.session.service'])
             }).then(function (data, status, headers, config) {
               var profile = data.data;
               profile.imgurl = 'http://graph.facebook.com/' + profile.id + '/picture?type=square';
+              profile.userId = profile.provider+'_'+profile.id;
               sessionManager.saveSession(profile);
               $rootScope.$broadcast('profile.update', profile);
               console.log('success for saving user to db' + profile);

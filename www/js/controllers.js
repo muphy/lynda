@@ -134,17 +134,18 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
       });
   })
   .controller('ProgramchatCtrl', function ($scope, $rootScope, $ionicModal, $http, configuration, $stateParams,
-    $timeout, $interval, $ionicScrollDelegate, Faye, sessionManager, facebookLoginManager, IDService, $http) {
+    $timeout, $interval, $ionicScrollDelegate, Faye, sessionManager, facebookLoginManager, IDService) {
     // console.log($ionicHistory.viewHistory());
     var channelName = '/' + $stateParams.programId;
     var scheduleId = $stateParams.programId.split('_')[0]
     var me = sessionManager.me();
-    var userId;
     if (me) {
-      userId = me.provider + '_' + me.id;
-      $scope.me = me;
-      $scope.me.userId = userId;
+      var userId = me.provider + '_' + me.id;
+      me.userId = me.userId||me.provider + '_' + me.id;
+    } else {
+      me.userId = IDService.getId();
     }
+    $scope.me = me;
     $scope.members = 0;
     $scope.messages = [];
     $scope.programName = $stateParams.programName;
