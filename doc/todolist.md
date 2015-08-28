@@ -6,3 +6,6 @@
 6. realtime update chat message in the room list page.
 7. Add simsimi api because there are no people in the room
    - https://github.com/SimSimi-Inc/SimSimiApiCodeSamples/tree/master/nodejs/SimSimi_Nodejs
+8. when shows modal, hide keyboard
+9. reference
+   - http://qnimate.com/making-a-phonegap-look-like-native-app/
