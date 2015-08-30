@@ -4,7 +4,6 @@
 		<button class="button button-icon button-clear ion-person-stalker" ng-click="showMembers()">
 		</button>
 	</ion-nav-buttons>
-
 	<ion-content has-bouncing="true" class="has-header has-footer" delegate-handle="userMessageScroll">
 		<div ng-repeat="message in messages" class="message-wrapper">
 			<div ng-if="!message.isChat" class="event-message">
@@ -16,13 +15,13 @@
 				<div class="chat-bubble left">
 					<div class="message" ng-bind-html="message.text | nl2br" autolinker></div>
 					<div class="message-detail">
-						<span ng-click="viewProfile(message)" class="bold">{{toUser.username}}</span>
+						<span ng-click="viewProfile(message)" class="bold">{{::toUser.username}}</span>
 						<!--<span am-time-ago="message.date"></span>-->
 					</div>
 				</div>
 				<div class="message-info text-ellipsis left">
-					<div class="talker name left">{{message.username}}</div>
-					<div class="chat-time left">{{message.date | date:'h:mma'}}</div>
+					<div class="talker name left">{{::message.username}}</div>
+					<div class="chat-time left">{{::message.date | date:'h:mma'}}</div>
 				</div>
 			</div>
 			<div ng-if="message.isChat && me.userId === message.userId">
@@ -31,13 +30,13 @@
 				<div class="chat-bubble right">
 					<div class="message" ng-bind-html="message.text | nl2br" autolinker></div>
 					<div class="message-detail">
-						<span ng-click="viewProfile(message)" class="bold">{{user.username}}</span>
+						<span ng-click="viewProfile(message)" class="bold">{{::user.username}}</span>
 						<!--<span am-time-ago="message.date"></span>-->
 					</div>
 				</div>
 				<div class="message-info text-ellipsis right">
-					<div class="talker name right">{{message.username}}</div>
-					<div class="chat-time right">{{message.date | date:'h:mma'}}</div>
+					<div class="talker name right">{{::message.username}}</div>
+					<div class="chat-time right">{{::message.date | date:'h:mma'}}</div>
 				</div>
 			</div>
 			<div class="cf"></div>

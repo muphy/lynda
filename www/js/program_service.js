@@ -42,11 +42,13 @@ angular.module('CacheService', ['ng'])
     return $cacheFactory('CacheService');
   });
 
-angular.module('starter.session.service', ['starter.localstorage.service', 'CacheService'])
-  .factory('sessionManager', ['$localstorage', 'CacheService', function ($localstorage, CacheService) {
+angular.module('starter.session.service', ['starter.localstorage.service', 'CacheService', 'IDService'])
+  .factory('sessionManager', ['$localstorage', 'CacheService', 'IDService', function ($localstorage, CacheService, IDService) {
     return {
       saveSession: function (profile) {
         $localstorage.setObject('me', profile);
+        profile.isLogin = true;
+        profile.userId = profile.provider + '_' + profile.id;
         CacheService.put('me', profile);
       },
       removeSession: function () {
@@ -59,15 +61,21 @@ angular.module('starter.session.service', ['starter.localstorage.service', 'Cach
         } else {
           var profile = $localstorage.getObject('me');
           if (profile) {
+            profile.isLogin = true;
+            profile.userId = profile.provider + '_' + profile.id;
             CacheService.put('me', profile);
             return profile;
           } else {
-            return null;
+            return {
+              userId: IDService.getId(),
+              isLogin: false,
+              name: 'Guest',
+            };
           }
         }
       },
       isLogin: function () {
-        return this.me() != null;
+        return this.me().isLogin;
       }
     }
   }]);
@@ -112,7 +120,7 @@ angular.module('facebook.login.service', ['starter.session.service'])
             }).then(function (data, status, headers, config) {
               var profile = data.data;
               profile.imgurl = 'http://graph.facebook.com/' + profile.id + '/picture?type=square';
-              profile.userId = profile.provider+'_'+profile.id;
+              profile.userId = profile.provider + '_' + profile.id;
               sessionManager.saveSession(profile);
               $rootScope.$broadcast('profile.update', profile);
               console.log('success for saving user to db' + profile);

@@ -17,11 +17,11 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     $scope.loginData = {};
     var me = sessionManager.me();
     if (sessionManager.isLogin()) {
-      $scope.profileImg = me.imgurl || 'img/logo.png';
+      $scope.profileImg = me.imgurl || 'img/default-user.png';
       $scope.username = me.name;
     } else {
-      $scope.profileImg = 'img/logo.png';
-      $scope.username = '';
+      $scope.profileImg = 'img/default-user.png';
+      $scope.username = 'Guest';
     }
     $scope.$on('profile.update', function (event, data) {
       $scope.profileImg = data.imgurl;
@@ -139,20 +139,14 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     var channelName = '/' + $stateParams.programId;
     var scheduleId = $stateParams.programId.split('_')[0]
     var me = sessionManager.me();
-    if (me) {
-      var userId = me.provider + '_' + me.id;
-      me.userId = me.userId||me.provider + '_' + me.id;
-    } else {
-      me.userId = IDService.getId();
-    }
     $scope.me = me;
     $scope.members = 0;
     $scope.messages = [];
     $scope.programName = $stateParams.programName;
     $scope.isLogin = sessionManager.isLogin();
-    // $scope.$on('profile.update', function (event, data) {
-    //   me = sessionManager.me();
-    // });
+    $scope.$on('profile.update', function (event, data) {
+      me = sessionManager.me();
+    });
     var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
     var footerBar; // gets set in $ionicView.enter
     var scroller;
@@ -204,6 +198,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
           // Execute action
         });
         $scope.$on('modal.shown', function () {
+          if(window.cordova)cordova.plugins.Keyboard.hide();
           $http.get(configuration.serverUrl + '/participants/' + scheduleId)
             .success(function (res) {
               $scope.participants = res;
@@ -227,6 +222,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
       console.log('$ionicView.enter fired!!!!!!!!!!!!!!!!!!!!');
       var message = {
         type: 'join',
+        scheduleId:scheduleId,
         channel: {
           name: $stateParams.programName,
           id: channelName,
@@ -264,6 +260,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     $scope.$on('$ionicView.beforeLeave', function () {
       var message = {
         type: 'exit',
+        scheduleId:scheduleId,
         channel: {
           name: $stateParams.programName,
           id: channelName,
@@ -372,7 +369,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     };
     facebookLoginManager.attachLogin($scope, function (profile) {
       $scope.isLogin = true;
-      me = sessionManager.me();
+      $scope.me = sessionManager.me();
     });
     
     // I emit this event from the monospaced.elastic directive, read line 480

@@ -524,3 +524,7 @@ input, textarea {
   right: 30px;
   position: absolute;
 }
+
+#userMessagesView {
+  background-color: #E8EAF6;
+}

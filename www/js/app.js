@@ -45,7 +45,7 @@ var app = angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'
 
   })
 
-  .config(function ($stateProvider, $urlRouterProvider,$ionicConfigProvider) {
+  .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     $ionicConfigProvider.navBar.alignTitle('center');
     $stateProvider
       .state('app', {
@@ -84,15 +84,6 @@ var app = angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'
         }
       })
 
-    //   .state('app.single', {
-    //   url: "/playlists/:playlistId",
-    //   views: {
-    //     'menuContent': {
-    //       templateUrl: "templates/playlist.html",
-    //       controller: 'PlaylistCtrl'
-    //     }
-    //   }
-    // });
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/app/programlists');
   });
@@ -112,45 +103,44 @@ app// fitlers
         return data.replace(/\n\r?/g, '<br />');
       };
     }
-  ])
-
+  ]);
 // directives
-  .directive('autolinker', ['$timeout',
-    function ($timeout) {
-      return {
-        restrict: 'A',
-        link: function (scope, element, attrs) {
-          $timeout(function () {
-            var eleHtml = element.html();
+  app.directive('autolinker', ['$timeout',
+  function ($timeout) {
+    return {
+      restrict: 'A',
+      link: function (scope, element, attrs) {
+        $timeout(function () {
+          var eleHtml = element.html();
 
-            if (eleHtml === '') {
-              return false;
+          if (eleHtml === '') {
+            return false;
+          }
+
+          var text = Autolinker.link(eleHtml, {
+            className: 'autolinker',
+            newWindow: false
+          });
+
+          element.html(text);
+
+          var autolinks = element[0].getElementsByClassName('autolinker');
+          var handler = function (e) {
+            var href = e.target.href;
+            console.log('autolinkClick, href: ' + href);
+
+            if (href) {
+              //window.open(href, '_system');
+              window.open(href, '_blank');
             }
-
-            var text = Autolinker.link(eleHtml, {
-              className: 'autolinker',
-              newWindow: false
-            });
-
-            element.html(text);
-
-            var autolinks = element[0].getElementsByClassName('autolinker');
-            var handler = function (e) {
-              var href = e.target.href;
-              console.log('autolinkClick, href: ' + href);
-
-              if (href) {
-                //window.open(href, '_system');
-                window.open(href, '_blank');
-              }
-              e.preventDefault();
-              return false;
-            };
-            for (var i = 0; i < autolinks.length; i++) {
-              angular.element(autolinks[i]).bind('click', handler);
-            }
-          }, 0);
-        }
+            e.preventDefault();
+            return false;
+          };
+          for (var i = 0; i < autolinks.length; i++) {
+            angular.element(autolinks[i]).bind('click', handler);
+          }
+        }, 0);
       }
     }
-  ])
+  }
+])
