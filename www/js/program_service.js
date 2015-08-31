@@ -9,12 +9,18 @@ angular.module('starter.services', [])
   .factory('ProgramService', ['$http', 'configuration', function ($http, configuration) {
 
     var factory = {};
+    var baseHour = 1;
     factory.getProgramList = function () {
 
     };
     factory.getCurrentProgramList = function () {
       // console.log(configuraion);
+      baseHour = 0;
       return $http.get(configuration.serverUrl + '/programs/current?d=' + Date.now());
+    }
+    factory.getPreviousProgramList = function () {
+      // console.log(configuraion);
+      return $http.get(configuration.serverUrl + '/programs/previous/' + baseHour);
     }
     return factory;
   }]);
@@ -67,12 +73,15 @@ angular.module('starter.session.service', ['starter.localstorage.service', 'Cach
             return profile;
           } else {
             return {
-              userId: IDService.getId(),
+              // userId: IDService.getId(),
               isLogin: false,
               name: 'Guest',
             };
           }
         }
+      },
+      setDeviceId: function(deviceId) {
+        
       },
       isLogin: function () {
         return this.me().isLogin;
@@ -82,18 +91,20 @@ angular.module('starter.session.service', ['starter.localstorage.service', 'Cach
 
 angular.module('IDService', ['ionic'])
   .factory('IDService', function ($cordovaDevice) {
-    var deviceModel;
-    var deviceUUID;
-    if (ionic.Platform.isAndroid()) {
-      deviceModel = $cordovaDevice.getModel();
-      deviceUUID = $cordovaDevice.getUUID();
-    } else {
-      console.log("Is not Android");
-      deviceModel = "windows";
-      deviceUUID = "testUUID";
-    }
     return {
       getId: function () {
+        if (ionic.Platform.isAndroid()) {
+          // deviceModel = $cordovaDevice.getModel();
+          if($cordovaDevice.getDevice()) {
+            return $cordovaDevice.getUUID();
+          } else {
+            return 'empty id';            
+          }
+
+        } else {
+          console.log("Is not Android");
+          return "testUUID";
+        }
         return deviceUUID;
       }
     }

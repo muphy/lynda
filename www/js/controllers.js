@@ -48,6 +48,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
   .controller('ProgramlistCtrl', function ($rootScope, $scope, ProgramService, ionicMaterialMotion, ionicMaterialInk, Faye, $timeout, $ionicHistory, $interval, $filter) {
     // console.log($ionicHistory.currentStateName());
     // console.log($ionicHistory.viewHistory());
+    // $scope.noMoreItemsAvailable = true;
     $rootScope.rightButton = '<button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>';
     $scope.programlist = [];
     Faye.subscribe('/lobby', function (message) {
@@ -115,14 +116,44 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
         $scope.programlist = convertProgramList(data);
         timer = $timeout(function () {
           ionicMaterialMotion.ripple();
+          $scope.$broadcast('scroll.refreshComplete');
         }, 100);
+        intInfiniteScroll();
       })
         .finally(function () {
           // Stop the ion-refresher from spinning
-          $scope.$broadcast('scroll.refreshComplete');
+          
         });
     };
-    refreshProgramList();
+    var intInfiniteScroll = function () {
+      $scope.loadMore = function () {
+        ProgramService.getPreviousProgramList().success(function (data, status) {
+          console.log('prevoius data', data);
+          data = convertProgramList(data);
+          data.forEach(function (e, i) {
+            console.log(e);
+            $scope.programlist.push(e);
+            $scope.moredata = false;
+          })
+          $scope.$broadcast('scroll.infiniteScrollComplete');
+          $timeout(function () {
+            getMore = false;
+          }, 1000);
+          // $scope.programlist.concat(data);
+        }).finally(function () {
+
+        });
+
+      };
+    }
+    // refreshProgramList();
+
+
+
+    // $scope.$on('$stateChangeSuccess', function () {
+    //   $scope.loadMore();
+    //   console.log('1111');
+    // });
     // var stopTime = $interval(refreshProgramList, 1000 * 60);
     // ProgramService.getCurrentProgramList().success(handleSuccess);
     
@@ -198,7 +229,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
           // Execute action
         });
         $scope.$on('modal.shown', function () {
-          if(window.cordova)cordova.plugins.Keyboard.hide();
+          if (window.cordova) cordova.plugins.Keyboard.hide();
           $http.get(configuration.serverUrl + '/participants/' + scheduleId)
             .success(function (res) {
               $scope.participants = res;
@@ -222,7 +253,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
       console.log('$ionicView.enter fired!!!!!!!!!!!!!!!!!!!!');
       var message = {
         type: 'join',
-        scheduleId:scheduleId,
+        scheduleId: scheduleId,
         channel: {
           name: $stateParams.programName,
           id: channelName,
@@ -260,7 +291,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     $scope.$on('$ionicView.beforeLeave', function () {
       var message = {
         type: 'exit',
-        scheduleId:scheduleId,
+        scheduleId: scheduleId,
         channel: {
           name: $stateParams.programName,
           id: channelName,
