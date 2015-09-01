@@ -15,12 +15,13 @@ angular.module('starter.services', [])
     };
     factory.getCurrentProgramList = function () {
       // console.log(configuraion);
-      baseHour = 0;
+      // baseHour = 0;
       return $http.get(configuration.serverUrl + '/programs/current?d=' + Date.now());
     }
     factory.getPreviousProgramList = function () {
       // console.log(configuraion);
       return $http.get(configuration.serverUrl + '/programs/previous/' + baseHour);
+      baseHour++;
     }
     return factory;
   }]);
