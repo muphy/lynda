@@ -118,14 +118,9 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
           ionicMaterialMotion.ripple();
           $scope.$broadcast('scroll.refreshComplete');
         }, 100);
-        intInfiniteScroll();
-      })
-        .finally(function () {
-          // Stop the ion-refresher from spinning
-          
-        });
+      });
     };
-    var intInfiniteScroll = function () {
+/*    var intInfiniteScroll = function () {
       $scope.loadMore = function () {
         ProgramService.getPreviousProgramList().success(function (data, status) {
           console.log('prevoius data', data);
@@ -140,23 +135,11 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
             getMore = false;
           }, 1000);
           // $scope.programlist.concat(data);
-        }).finally(function () {
-
         });
 
       };
-    }
-    // refreshProgramList();
+    };*/
 
-
-
-    // $scope.$on('$stateChangeSuccess', function () {
-    //   $scope.loadMore();
-    //   console.log('1111');
-    // });
-    // var stopTime = $interval(refreshProgramList, 1000 * 60);
-    // ProgramService.getCurrentProgramList().success(handleSuccess);
-    
     $scope.$on(
       "$destroy",
       function (event) {
