@@ -4,15 +4,16 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-var app = angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'ionic-material', 'monospaced.elastic', 'ngOpenFB'])
+var app = angular.module('starter', ['ionic','ionic.service.core','ionic.service.analytics', 'ngCordova', 'starter.controllers', 'ionic-material', 'monospaced.elastic', 'ngOpenFB'])
   .constant("configuration", {
-    // "serverUrl": "http://localhost:8888"
-    "serverUrl": "http://128.199.139.107:8888"
+    "serverUrl": "http://localhost:8888"
+    // "serverUrl": "http://128.199.139.107:8888"
   })
-  .run(function ($ionicPlatform, $openFB, $ionicPopup, $ionicHistory) {
+  .run(function ($ionicPlatform, $openFB, $ionicPopup, $ionicHistory,$ionicAnalytics) {
 
     // amMoment.changeLocale('ko');
     $openFB.init({ appId: '1692726940964374' });
+    $ionicAnalytics.register();
     $ionicPlatform.ready(function () {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
