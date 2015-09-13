@@ -7,7 +7,7 @@
     </ion-refresher>
     <ion-list class="list" id="program-list">
       <ion-item class="program-item" ng-repeat="program in programlist">
-        <div class="list card">
+        <div class="list card" ng-click="joinRoom(program.scheduleId,program.beginTime,program.scheduleName)">
           <div class="item item-avatar">
             <img ng-src="{{program.thumbImg}}" class="program-item-img">
             <h2 class="title">{{::program.scheduleName}}</h2>

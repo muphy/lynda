@@ -45,16 +45,14 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
 
   })
 
-  .controller('ProgramlistCtrl', function ($rootScope, $scope, ProgramService, ionicMaterialMotion, ionicMaterialInk, Faye, $timeout, $ionicHistory, $interval, $filter) {
+  .controller('ProgramlistCtrl', function ($rootScope, $scope, $state,ProgramService, ionicMaterialMotion, ionicMaterialInk, Faye, $timeout, $ionicHistory, $interval, $filter) {
     // console.log($ionicHistory.currentStateName());
     // console.log($ionicHistory.viewHistory());
     // $scope.noMoreItemsAvailable = true;
-    $rootScope.rightButton = '<button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>';
     $scope.programlist = [];
     Faye.subscribe('/lobby', function (message) {
       console.log('in the lobby', message);
       var updatedProgram = JSON.parse(message).program;
-      var scheduleId = updatedProgram.scheduleId;
       var idx = _.findIndex($scope.programlist, { scheduleId: updatedProgram.scheduleId });
       if (idx > -1) {
         timer = $timeout(function () {
@@ -67,14 +65,19 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
       }, 200);
 
     });
-
+    
     $scope.$on('$ionicView.enter', function () {
       console.log('UserMessages $ionicView.enter');
-      refreshProgramList();
     });
     $scope.doRefresh = function () {
       console.log('refreshed');
       refreshProgramList();
+    };
+    $scope.joinRoom = function (scheduleId,beginTime,scheduleName) {
+      var programId = scheduleId + '_' + beginTime;
+      var programName = scheduleName;
+      ionicMaterialInk.displayEffect();
+      $state.go('app.programchat',{programId:programId,programName:programName});
     };
     var reset = function () {
       var inClass = document.querySelectorAll('.in');
@@ -120,6 +123,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
         }, 100);
       });
     };
+    refreshProgramList();
 /*    var intInfiniteScroll = function () {
       $scope.loadMore = function () {
         ProgramService.getPreviousProgramList().success(function (data, status) {

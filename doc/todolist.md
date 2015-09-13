@@ -8,7 +8,7 @@
 9. reference
    - http://qnimate.com/making-a-phonegap-look-like-native-app/
 10. Add voting page for Adding removed channel to program list   
-11. 
+11. Add a suggestion page.
 ---------------------------------------------------------------------
 8. when shows modal, hide keyboard
 3. fix bug that function of showing current participants not work
