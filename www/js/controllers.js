@@ -108,7 +108,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
       var result = _.each(programList, function (program) {
         program.startHour = $filter('date')(new Date(program.beginTime), 'h:mma');
         program.endHour = $filter('date')(new Date(program.endTime), 'h:mma');
-        program.roomName = '#/app/programlists/' + program.scheduleId + '_' + program.beginTime + '/' + program.scheduleName;
+        program.roomName = '#/app/main/programlists/' + program.scheduleId + '_' + program.beginTime + '/' + program.scheduleName;
         return program;
       });
       return result;
@@ -178,6 +178,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
     });
     $scope.$on('$ionicView.beforeEnter', function () {
       console.log('UserMessages $ionicView.enter');
+      $rootScope.hideTabs = true;
       $http.get(configuration.serverUrl + '/messages/' + scheduleId)
         .success(function (res) {
           $scope.messages = res || [];
@@ -269,6 +270,7 @@ angular.module('starter.controllers', ['starter.services', 'faye', 'starter.sess
       console.log('leaving UserMessages view, destroying interval');
       // Make sure that the interval is destroyed
       console.log('$ionicView.beforeLeave called');
+      $root.hideTabs = false;
       Faye.unsubscribe(channelName, function (data) {
         console.log('unsubscribe data:' + data);
       });

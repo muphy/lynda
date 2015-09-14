@@ -4,12 +4,12 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-var app = angular.module('starter', ['ionic','ionic.service.core','ionic.service.analytics', 'ngCordova', 'starter.controllers', 'ionic-material', 'monospaced.elastic', 'ngOpenFB'])
+var app = angular.module('starter', ['ionic', 'ionic.service.core', 'ionic.service.analytics', 'ngCordova', 'starter.controllers', 'ionic-material', 'monospaced.elastic', 'ngOpenFB'])
   .constant("configuration", {
     "serverUrl": "http://localhost:8888"
     // "serverUrl": "http://128.199.139.107:8888"
   })
-  .run(function ($ionicPlatform, $openFB, $ionicPopup, $ionicHistory,$ionicAnalytics) {
+  .run(function ($ionicPlatform, $openFB, $ionicPopup, $ionicHistory, $ionicAnalytics) {
 
     // amMoment.changeLocale('ko');
     $openFB.init({ appId: '1692726940964374' });
@@ -56,7 +56,7 @@ var app = angular.module('starter', ['ionic','ionic.service.core','ionic.service
         controller: 'AppCtrl'
       })
 
-      .state('app.programlist', {
+      .state('app.main.programlist', {
         url: "/programlists",
         views: {
           'menuContent': {
@@ -65,10 +65,10 @@ var app = angular.module('starter', ['ionic','ionic.service.core','ionic.service
           }
         }
       })
-      .state('app.programchat', {
+      .state('app.main.programchat', {
         url: "/programlists/:programId/:programName",
         views: {
-          'menuContent': {
+          'main-contact': {
             templateUrl: "templates/programchat.html",
             controller: 'ProgramchatCtrl'
           }
@@ -85,8 +85,40 @@ var app = angular.module('starter', ['ionic','ionic.service.core','ionic.service
         }
       })
 
+      .state('app.main', {
+        url: "/main",
+        abstract: true,
+        views: {
+          'menuContent': {
+            templateUrl: "templates/main/main.html",
+            // controller: 'MainCtrl'
+          }
+        }
+      })
+
+      .state('app.main.contact', {
+        url: "/contact",
+        views: {
+          'main-contact': {
+            // templateUrl: "templates/main/contact.html",
+            // // controller: 'HomeTabCtrl'
+                        templateUrl: "templates/programlist.html",
+            controller: 'ProgramlistCtrl'
+          }
+        }
+      })
+      .state('app.main.about', {
+        url: "/about",
+        views: {
+          'main-about': {
+            templateUrl: "templates/main/about.html"
+          }
+        }
+      })
+
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/app/programlists');
+    // $urlRouterProvider.otherwise('/app/programlists');
+    $urlRouterProvider.otherwise('/app/main/contact');
   });
 
 
@@ -106,7 +138,7 @@ app// fitlers
     }
   ]);
 // directives
-  app.directive('autolinker', ['$timeout',
+app.directive('autolinker', ['$timeout',
   function ($timeout) {
     return {
       restrict: 'A',
@@ -145,3 +177,18 @@ app// fitlers
     }
   }
 ])
+
+// app.directive('hideTabs', function($rootScope) {
+//     return {
+//         restrict: 'A',
+//         link: function(scope, element, attributes) {
+//             scope.$watch(attributes.hideTabs, function(value){
+//                 $rootScope.hideTabs = value;
+//             });
+
+//             scope.$on('$destroy', function() {
+//                 $rootScope.hideTabs = false;
+//             });
+//         }
+//     };
+// });
